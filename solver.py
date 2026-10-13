@@ -38,8 +38,8 @@ class Solver(object):
     def __init__(self, config):
         self.__dict__.update(config)
 
-        # 建议外部配置或默认设为 40 轮
-        self.num_epochs = getattr(self, 'num_epochs', 40)
+        # 训练 25 轮，留足拟合空间
+        self.num_epochs = getattr(self, 'num_epochs', 25)
 
         # 1. 数据加载
         self.train_loader = get_loader_segment(
@@ -64,7 +64,7 @@ class Solver(object):
             dataset=self.dataset,
         )
 
-        # 2. 计算设备绑定
+        # 2. 设备探测
         if hasattr(torch, 'xpu') and torch.xpu.is_available():
             self.device = torch.device('xpu')
         elif torch.cuda.is_available():
@@ -73,9 +73,9 @@ class Solver(object):
             self.device = torch.device('cpu')
         print(f"[Solver] Active Device: {self.device}")
 
-        # 3. 初始化模型
-        d_model = getattr(self, 'd_model', 64)
-        num_codes = getattr(self, 'num_codes', 128)
+        # 3. 初始化扩容模型 (d_model=128, num_codes=256)
+        d_model = getattr(self, 'd_model', 128)
+        num_codes = getattr(self, 'num_codes', 256)
         self.model = CEPNet(
             c_in=self.input_c,
             win_size=self.win_size,
@@ -84,9 +84,8 @@ class Solver(object):
         ).to(self.device)
 
         total_params = sum(p.numel() for p in self.model.parameters())
-        print(f"[Model] Spherical EMA-VQ CEPNet | Epochs: {self.num_epochs} | Params: {total_params:,}")
+        print(f"[Model] Scaled CEPNet | Epochs: {self.num_epochs} | Params: {total_params:,}")
 
-        # 采用余弦学习率衰减，保障充分收敛
         self.optimizer = torch.optim.AdamW(
             self.model.parameters(), lr=getattr(self, 'lr', 1e-3), weight_decay=1e-4
         )
@@ -95,7 +94,7 @@ class Solver(object):
         )
 
     def train(self):
-        print("======================TRAIN CEP-Net (SPHERICAL EMA-VQ)======================")
+        print("======================TRAIN CEP-Net (SCALED CAPACITY)======================")
         if not os.path.exists(self.model_save_path):
             os.makedirs(self.model_save_path)
 
@@ -168,7 +167,7 @@ class Solver(object):
 
         thre_scores = np.concatenate(thre_scores, axis=0)
         anomaly_threshold = np.percentile(thre_scores, 100 - self.anormly_ratio)
-        print(f"[Threshold] Selected Cutoff: {anomaly_threshold:.4f}")
+        print(f"[Threshold] Selected Threshold: {anomaly_threshold:.4f}")
 
         print("======================TEST & EVALUATION======================")
         test_scores = []

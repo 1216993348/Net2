@@ -4,11 +4,8 @@ import torch.nn.functional as F
 
 
 class EMAVectorQuantizer(nn.Module):
-    """
-    全超球对齐的 EMA 离散词元库：
-    确保索引检索、直通估计、解码器输入均在归一化特征空间完成，消除尺度漂移。
-    """
-    def __init__(self, num_codes=128, d_model=64, decay=0.99, eps=1e-5):
+    """超球对齐的 EMA 离散词元库"""
+    def __init__(self, num_codes=256, d_model=128, decay=0.99, eps=1e-5):
         super(EMAVectorQuantizer, self).__init__()
         self.num_codes = num_codes
         self.d_model = d_model
@@ -22,24 +19,17 @@ class EMAVectorQuantizer(nn.Module):
         self.register_buffer('embedding_avg', embedding.clone())
 
     def forward(self, z):
-        # z: [B, L, D]
         B, L, D = z.shape
-        # 全程在 L2 归一化空间中操作，彻底封死尺度漂移
         z_norm = F.normalize(z, p=2, dim=-1)
         z_flat = z_norm.reshape(-1, D)
-
         emb_norm = F.normalize(self.embedding, p=2, dim=-1)
 
-        # 归一化余弦距离: ||a - b||^2 = 2 - 2 * <a, b>
         similarity = torch.matmul(z_flat, emb_norm.t())
         dists = 2.0 - 2.0 * similarity
 
-        # 最近邻检索
         encoding_indices = torch.argmin(dists, dim=1)
-        # 解码基元统一取归一化后的向量
         z_q = emb_norm[encoding_indices].reshape(B, L, D)
 
-        # EMA 更新机制
         if self.training:
             encodings_onehot = F.one_hot(encoding_indices, self.num_codes).float()
             new_cluster_size = torch.sum(encodings_onehot, dim=0)
@@ -48,7 +38,7 @@ class EMAVectorQuantizer(nn.Module):
             self.cluster_size.data.mul_(self.decay).add_(new_cluster_size, alpha=1 - self.decay)
             self.embedding_avg.data.mul_(self.decay).add_(new_embedding_avg, alpha=1 - self.decay)
 
-            # 死码重置：检测并激活未匹配基元
+            # 死码重置
             dead_codes = self.cluster_size < 1e-2
             if dead_codes.any():
                 n_dead = dead_codes.sum().item()
@@ -61,45 +51,66 @@ class EMAVectorQuantizer(nn.Module):
             updated_embedding = self.embedding_avg / safe_cluster_size
             self.embedding.data.copy_(F.normalize(updated_embedding, p=2, dim=-1))
 
-        # Commitment 损失 (严格在归一化空间计算，数值稳在 0~1 之间)
         loss_commit = F.mse_loss(z_norm, z_q.detach())
-
-        # 直通估计器 (Straight-Through Estimator)
         z_q = z_norm + (z_q - z_norm).detach()
-
         min_dist = torch.min(dists, dim=1)[0].reshape(B, L)
         return z_q, loss_commit, min_dist
 
 
 class CEPNet(nn.Module):
     """
-    反事实流形网络：全超球对齐因果架构
+    大容量反事实流形网络：
+    引入多尺度膨胀因果卷积与 128 维特征流形，参数量提升至 ~20 万
     """
-    def __init__(self, c_in=55, win_size=60, d_model=64, num_codes=128):
+    def __init__(self, c_in=55, win_size=60, d_model=128, num_codes=256):
         super(CEPNet, self).__init__()
         self.c_in = c_in
         self.win_size = win_size
         self.d_model = d_model
 
-        # 编码器 (带通道膨胀的特征提取)
-        self.enc_conv1 = nn.Conv1d(c_in, d_model, kernel_size=3, padding=1)
-        self.enc_norm1 = nn.GroupNorm(8, d_model)
-        self.enc_conv2 = nn.Conv1d(d_model, d_model, kernel_size=3, padding=1)
-        self.enc_norm2 = nn.GroupNorm(8, d_model)
+        # 1. 深度时空多尺度编码器 (捕获局部高频与全局周期)
+        self.enc_in = nn.Conv1d(c_in, d_model, kernel_size=1)
+        self.enc_block1 = nn.Sequential(
+            nn.Conv1d(d_model, d_model, kernel_size=3, padding=1, dilation=1),
+            nn.GroupNorm(8, d_model),
+            nn.GELU()
+        )
+        self.enc_block2 = nn.Sequential(
+            nn.Conv1d(d_model, d_model, kernel_size=3, padding=2, dilation=2),
+            nn.GroupNorm(8, d_model),
+            nn.GELU()
+        )
+        self.enc_block3 = nn.Sequential(
+            nn.Conv1d(d_model, d_model, kernel_size=3, padding=4, dilation=4),
+            nn.GroupNorm(8, d_model),
+            nn.GELU()
+        )
 
-        # 超球离散词元库
+        # 2. 扩容离散词元库
         self.quantizer = EMAVectorQuantizer(num_codes=num_codes, d_model=d_model)
 
-        # 解码器 (从纯净离散基元生成物理波形)
-        self.dec_conv1 = nn.Conv1d(d_model, d_model, kernel_size=3, padding=1)
-        self.dec_norm1 = nn.GroupNorm(8, d_model)
-        self.dec_conv2 = nn.Conv1d(d_model, c_in, kernel_size=1)
+        # 3. 增强解码器 (利用多尺度特征逆向合成波形)
+        self.dec_block1 = nn.Sequential(
+            nn.Conv1d(d_model, d_model, kernel_size=3, padding=4, dilation=4),
+            nn.GroupNorm(8, d_model),
+            nn.GELU()
+        )
+        self.dec_block2 = nn.Sequential(
+            nn.Conv1d(d_model, d_model, kernel_size=3, padding=2, dilation=2),
+            nn.GroupNorm(8, d_model),
+            nn.GELU()
+        )
+        self.dec_block3 = nn.Sequential(
+            nn.Conv1d(d_model, d_model, kernel_size=3, padding=1, dilation=1),
+            nn.GroupNorm(8, d_model),
+            nn.GELU()
+        )
+        self.dec_out = nn.Conv1d(d_model, c_in, kernel_size=1)
 
-        # 各传感器可学习刚度
+        # 4. 可学习通道刚度参数
         self.log_lambda = nn.Parameter(torch.zeros(c_in))
 
     def freeze_codebook(self):
-        """冻结词表进入第二阶段"""
         self.quantizer.eval()
         print("[Model] Stage 2: Codebook permanently FROZEN.")
 
@@ -107,25 +118,28 @@ class CEPNet(nn.Module):
         B, L, C = x.shape
         x_trans = x.transpose(1, 2).contiguous()
 
-        # 1. 连续流形映射
-        h = F.gelu(self.enc_norm1(self.enc_conv1(x_trans)))
-        h = F.gelu(self.enc_norm2(self.enc_conv2(h)))
-        z = h.transpose(1, 2).contiguous()  # [B, L, d_model]
+        # 1. 连续流形编码
+        h = self.enc_in(x_trans)
+        h = h + self.enc_block1(h)
+        h = h + self.enc_block2(h)
+        h = h + self.enc_block3(h)
+        z = h.transpose(1, 2).contiguous()
 
-        # 2. 超球离散纯净投影
+        # 2. 离散基元纯净投影
         z_q, loss_commit, min_dist = self.quantizer(z)
 
         # 3. 反事实物理基准生成 X*
-        q_trans = z_q.transpose(1, 2).contiguous()
-        dh = F.gelu(self.dec_norm1(self.dec_conv1(q_trans)))
-        x_star = self.dec_conv2(dh).transpose(1, 2).contiguous()  # [B, L, C]
+        qh = z_q.transpose(1, 2).contiguous()
+        qh = qh + self.dec_block1(qh)
+        qh = qh + self.dec_block2(qh)
+        qh = qh + self.dec_block3(qh)
+        x_star = self.dec_out(qh).transpose(1, 2).contiguous()
 
         # 4. Pearl 个体因果干预效应 (ITE)
         lambdas = F.softplus(self.log_lambda)
         intervention_effect = x - x_star
         weighted_energy = lambdas * (intervention_effect ** 2)
 
-        # 异常得分：以物理能量为主，结合少量流形离散惩罚
         time_score = torch.sum(weighted_energy, dim=-1) + 0.01 * min_dist
         channel_attribution = torch.mean(weighted_energy, dim=1)
 
