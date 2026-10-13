@@ -38,7 +38,7 @@ class Solver(object):
     def __init__(self, config):
         self.__dict__.update(config)
 
-        self.num_epochs = getattr(self, 'num_epochs', 30)
+        self.num_epochs = getattr(self, 'num_epochs', 20)
 
         # 1. 数据加载
         self.train_loader = get_loader_segment(
@@ -72,9 +72,8 @@ class Solver(object):
             self.device = torch.device('cpu')
         print(f"[Solver] Active Device: {self.device}")
 
-        # 3. 初始化模型 (加入 top_k=3 局部故障感知)
+        # 3. 初始化 Masked Counterfactual 模型
         d_model = getattr(self, 'd_model', 128)
-        num_codes = getattr(self, 'num_codes', 256)
         n_layers = getattr(self, 'n_layers', 3)
         top_k = getattr(self, 'top_k', 3)
 
@@ -82,36 +81,31 @@ class Solver(object):
             c_in=self.input_c,
             win_size=self.win_size,
             d_model=d_model,
-            num_codes=num_codes,
             n_layers=n_layers,
+            mask_ratio=0.4,
             top_k=top_k,
         ).to(self.device)
 
         total_params = sum(p.numel() for p in self.model.parameters())
-        print(f"[Model] Scaled CEPNet | Epochs: {self.num_epochs} | Top-K: {top_k} | Params: {total_params:,}")
+        print(f"[Model] Masked-CEPNet | Epochs: {self.num_epochs} | Params: {total_params:,}")
 
         self.optimizer = torch.optim.AdamW(
-            self.model.parameters(), lr=getattr(self, 'lr', 1e-3), weight_decay=1e-4
+            self.model.parameters(), lr=getattr(self, 'lr', 5e-4), weight_decay=1e-4
         )
         self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
             self.optimizer, T_max=self.num_epochs, eta_min=1e-5
         )
 
     def train(self):
-        print("======================TRAIN CEP-Net (TOP-K ROOT-FOCUSED)======================")
+        print("======================TRAIN CEP-Net (MASKED COUNTERFACTUAL)======================")
         if not os.path.exists(self.model_save_path):
             os.makedirs(self.model_save_path)
 
         train_steps = len(self.train_loader)
-        freeze_epoch = int(self.num_epochs * 0.7)
 
         for epoch in range(self.num_epochs):
-            if epoch == freeze_epoch:
-                self.model.freeze_codebook()
-
             start_time = time.time()
-            rec_list = []
-            commit_list = []
+            loss_list = []
             self.model.train()
 
             with tqdm(
@@ -123,29 +117,23 @@ class Solver(object):
                     x = input_data.float().contiguous().to(self.device)
 
                     self.optimizer.zero_grad()
-                    x_star, _, _, loss_commit = self.model(x)
+                    x_star, _, _ = self.model(x)
 
-                    loss_rec = torch.mean((x - x_star) ** 2)
-                    total_loss = loss_rec + 0.25 * loss_commit
+                    # 纯粹优雅的掩码自编码重构损失
+                    loss = torch.mean((x - x_star) ** 2)
 
-                    total_loss.backward()
+                    loss.backward()
                     torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
                     self.optimizer.step()
 
-                    rec_list.append(loss_rec.item())
-                    commit_list.append(loss_commit.item())
-
-                    pbar.set_postfix({
-                        'rec': f"{loss_rec.item():.4f}",
-                        'commit': f"{loss_commit.item():.4f}",
-                    })
+                    loss_list.append(loss.item())
+                    pbar.set_postfix({'rec_loss': f"{loss.item():.4f}"})
                     pbar.update(1)
 
             self.scheduler.step()
             elapsed_time = time.time() - start_time
             print(
-                f"Epoch: {epoch + 1} | Rec Loss: {np.mean(rec_list):.5f} |"
-                f" Commit Loss: {np.mean(commit_list):.5f} | Time: {elapsed_time:.2f}s"
+                f"Epoch: {epoch + 1} | Rec Loss: {np.mean(loss_list):.5f} | Time: {elapsed_time:.2f}s"
             )
 
         save_file = os.path.join(self.model_save_path, f"{self.dataset}_checkpoint.pth")
@@ -165,13 +153,13 @@ class Solver(object):
         with torch.no_grad():
             for input_data, _ in self.thre_loader:
                 x = input_data.float().contiguous().to(self.device)
-                _, time_score, _, _ = self.model(x)
+                _, time_score, _ = self.model(x)
                 step_score = time_score[:, -1].detach().cpu().numpy()
                 thre_scores.append(step_score)
 
         thre_scores = np.concatenate(thre_scores, axis=0)
         anomaly_threshold = np.percentile(thre_scores, 100 - self.anormly_ratio)
-        print(f"[Threshold] Selected Cutoff: {anomaly_threshold:.4f}")
+        print(f"[Threshold] Selected Threshold: {anomaly_threshold:.4f}")
 
         print("======================TEST & EVALUATION======================")
         test_scores = []
@@ -181,7 +169,7 @@ class Solver(object):
         with torch.no_grad():
             for input_data, labels in self.test_loader:
                 x = input_data.float().contiguous().to(self.device)
-                _, time_score, channel_attr, _ = self.model(x)
+                _, time_score, channel_attr = self.model(x)
 
                 step_score = time_score[:, -1].detach().cpu().numpy()
                 test_scores.append(step_score)
