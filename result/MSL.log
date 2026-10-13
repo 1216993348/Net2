@@ -1151,3 +1151,99 @@ train: (46653, 55)
 ======================TRAIN CEP-Net (CAUSAL SECOND-ORDER)======================
 Epoch: 1 | Rec Loss: 0.55179 | Manifold Loss: 2.03534 | Time: 16.20s
 Epoch: 2 | Rec Loss: 0.39531 | Manifold Loss: 0.29034 | Time: 15.58s
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Active Device: xpu
+[Model] CEP-Net (Causal Hessian) Loaded | Prototypes: 16 | Params: 14,919
+======================TRAIN CEP-Net (CAUSAL POTENTIAL)======================
+Epoch: 1 | Rec Loss: 0.55179 | Manifold Loss: 2.03534 | Time: 16.54s
+[Model] Checkpoint saved successfully: cpt\MSL_checkpoint.pth
+======================CALCULATE THRESHOLD======================
+[Threshold] Selected Threshold: 108.7700
+======================TEST & EVALUATION======================
+-----------------------------------------------------------------
+[Strict Point-wise] Precision: 0.2500 | Recall: 0.0494 | F1: 0.0825
+ROC-AUC: 0.5275 | AUPRC: 0.1524 | Accuracy: 0.8792
+[Point-Adjusted]    Precision: 0.5556 | Recall: 0.1852 | F1: 0.2778
+-----------------------------------------------------------------
+[Root Cause Attribution Demonstration]
+  Step 00001 Fault Attribution:
+    Top-1 Cause: Channel 43 (Contribution: 31.67%)
+    Top-2 Cause: Channel 47 (Contribution: 12.78%)
+    Top-3 Cause: Channel 11 (Contribution: 12.22%)
+  Step 00037 Fault Attribution:
+    Top-1 Cause: Channel 45 (Contribution: 56.43%)
+    Top-2 Cause: Channel 31 (Contribution: 34.04%)
+    Top-3 Cause: Channel 49 (Contribution: 1.92%)
+  Step 00081 Fault Attribution:
+    Top-1 Cause: Channel 35 (Contribution: 40.62%)
+    Top-2 Cause: Channel 12 (Contribution: 12.78%)
+    Top-3 Cause: Channel 27 (Contribution: 10.45%)
+=================================================================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 2.451053 | Vali: 1.827250 | Time: 31.29s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.4003508739471493
+Accuracy: 0.9851 | Precision: 0.9259 | Recall: 0.9330 | F1-Score: 0.9295 | ROC-AUC: 0.4399

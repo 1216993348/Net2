@@ -1,229 +1,189 @@
-import os
-import time
 import torch
 import numpy as np
+import os
+import time
 from tqdm import tqdm
-from sklearn.metrics import (
-    precision_recall_fscore_support,
-    accuracy_score,
-    roc_auc_score,
-    average_precision_score,
-)
-from model.model import CEPNet
+from sklearn.metrics import precision_recall_fscore_support, accuracy_score, roc_auc_score
+from model.model import ProtoCausalAD
 from data_factory.data_loader import get_loader_segment
+import torch.nn.functional as F
 
 
-def adjust_predictions(gt, pred):
-    adjusted_pred = pred.copy()
-    anomaly_state = False
-    for i in range(len(gt)):
-        if gt[i] == 1 and adjusted_pred[i] == 1 and not anomaly_state:
-            anomaly_state = True
-            for j in range(i, 0, -1):
-                if gt[j] == 0:
-                    break
-                adjusted_pred[j] = 1
-            for j in range(i, len(gt)):
-                if gt[j] == 0:
-                    break
-                adjusted_pred[j] = 1
-        elif gt[i] == 0:
-            anomaly_state = False
-        if anomaly_state:
-            adjusted_pred[i] = 1
-    return adjusted_pred
+def compute_proto_loss(input_data, output, temperature=50.0, keep_batch=False):
+    """
+    计算基于原型因果的多任务联合损失与测试异常能量
+    """
+    rec_x = output['rec_x']
+    proto_loss = output['proto_loss']
+    margin_loss = output['margin_loss']
+    causal_latent_diff = output['causal_latent_diff']  # [B, L]
 
+    if keep_batch:
+        # ===== 测试/评估阶段：保留 [B, L] 维度 =====
+        rec_err = torch.mean((input_data - rec_x) ** 2, dim=-1)  # [B, L]
+
+        # 🎯 保留之前的 Softmax 温度放大小 Trick:
+        # 在窗口时间维度上对能量进行放大与聚焦，凸显瞬态尖峰与偏离对比度
+        raw_energy = causal_latent_diff + rec_err
+        metric = torch.softmax(raw_energy * (temperature / 2.0), dim=-1)
+        return metric
+    else:
+        # ===== 训练阶段：联合标量损失 =====
+        rec_loss = torch.mean((input_data - rec_x) ** 2)
+        total_loss = rec_loss + 0.1 * proto_loss + 0.1 * margin_loss
+        return total_loss, rec_loss, proto_loss, margin_loss
 
 class Solver(object):
+    DEFAULTS = {}
+
     def __init__(self, config):
-        self.__dict__.update(config)
+        self.__dict__.update(Solver.DEFAULTS, **config)
 
-        self.num_epochs = getattr(self, 'num_epochs', 15)
+        self.train_loader = get_loader_segment(self.data_path, batch_size=self.batch_size, win_size=self.win_size,
+                                               mode='train', dataset=self.dataset)
+        self.vali_loader = get_loader_segment(self.data_path, batch_size=self.batch_size, win_size=self.win_size,
+                                              mode='val', dataset=self.dataset)
+        self.test_loader = get_loader_segment(self.data_path, batch_size=self.batch_size, win_size=self.win_size,
+                                              mode='test', dataset=self.dataset)
+        self.thre_loader = get_loader_segment(self.data_path, batch_size=self.batch_size, win_size=self.win_size,
+                                              mode='thre', dataset=self.dataset)
 
-        # 1. 数据加载
-        self.train_loader = get_loader_segment(
-            self.data_path,
-            batch_size=self.batch_size,
-            win_size=self.win_size,
-            mode='train',
-            dataset=self.dataset,
-        )
-        self.test_loader = get_loader_segment(
-            self.data_path,
-            batch_size=self.batch_size,
-            win_size=self.win_size,
-            mode='test',
-            dataset=self.dataset,
-        )
-        self.thre_loader = get_loader_segment(
-            self.data_path,
-            batch_size=self.batch_size,
-            win_size=self.win_size,
-            mode='thre',
-            dataset=self.dataset,
-        )
-
-        # 2. 设备探测
         if hasattr(torch, 'xpu') and torch.xpu.is_available():
             self.device = torch.device('xpu')
         elif torch.cuda.is_available():
             self.device = torch.device(f"cuda:{self.gpu}")
         else:
             self.device = torch.device('cpu')
-        print(f"[Solver] Active Device: {self.device}")
 
-        # 3. 初始化因果势能网络
-        d_model = getattr(self, 'd_model', 64)
-        n_prototypes = getattr(self, 'n_prototypes', 16)
+        print(f"[Solver] Using execution device: {self.device}")
+        self.build_model()
 
-        self.model = CEPNet(
-            c_in=self.input_c,
+    def build_model(self):
+        self.model = ProtoCausalAD(
             win_size=self.win_size,
-            d_model=d_model,
-            n_prototypes=n_prototypes,
-            tau=0.5,
+            seq_size=self.seq_size,
+            c_in=self.input_c,
+            c_out=self.output_c,
+            d_model=self.d_model,
+            e_layers=self.e_layers,
+            num_prototypes=getattr(self, 'num_prototypes', 5),
+            margin=getattr(self, 'margin', 2.0),
+            epsilon=getattr(self, 'epsilon', 0.05),
+            dev=self.device
         ).to(self.device)
 
         total_params = sum(p.numel() for p in self.model.parameters())
-        print(f"[Model] CEP-Net (Causal Hessian) Loaded | Prototypes: {n_prototypes} | Params: {total_params:,}")
+        print(f"[Model] Total params: {total_params:,} ({total_params / 1e6:.2f}M)")
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
 
-        self.optimizer = torch.optim.AdamW(
-            self.model.parameters(), lr=getattr(self, 'lr', 1e-3), weight_decay=1e-4
-        )
+    def vali(self, vali_loader):
+        self.model.eval()
+        loss_list = []
+        with torch.no_grad():
+            for i, (input_data, _) in enumerate(vali_loader):
+                input_tensor = input_data.float().to(self.device)
+                output = self.model(input_tensor, training=False)
+                total_loss, _, _, _ = compute_proto_loss(input_tensor, output)
+                loss_list.append(total_loss.item())
+        return np.average(loss_list)
 
     def train(self):
-        print("======================TRAIN CEP-Net (CAUSAL SECOND-ORDER)======================")
-        if not os.path.exists(self.model_save_path):
-            os.makedirs(self.model_save_path)
-
+        print("======================TRAIN PROTO-CAUSAL AD======================")
+        path = self.model_save_path
+        if not os.path.exists(path):
+            os.makedirs(path)
         train_steps = len(self.train_loader)
 
-        for epoch in range(self.num_epochs):
+        for epoch in tqdm(range(self.num_epochs), disable=not self.print_tqdm):
             start_time = time.time()
             loss_list = []
-            rec_list = []
-            manifold_list = []
+
             self.model.train()
-
-            with tqdm(
-                total=train_steps,
-                desc=f"Epoch {epoch + 1}/{self.num_epochs}",
-                ncols=100,
-            ) as pbar:
+            with tqdm(total=train_steps, disable=not self.print_tqdm) as pbar:
                 for i, (input_data, _) in enumerate(self.train_loader):
-                    x = input_data.float().contiguous().to(self.device)
-
                     self.optimizer.zero_grad()
-                    x_star, _, _, dist_sq = self.model(x)
+                    input_tensor = input_data.float().to(self.device)
 
-                    # 1. 物理反事实重构损失
-                    loss_rec = torch.mean((x - x_star) ** 2)
-
-                    # 2. 原型吸引子聚类紧致性损失 (拉近正常特征至健康凸包)
-                    min_dist, _ = torch.min(dist_sq, dim=-1)
-                    loss_manifold = torch.mean(min_dist)
-
-                    total_loss = loss_rec + 0.05 * loss_manifold
-
-                    total_loss.backward()
-                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
-                    self.optimizer.step()
+                    # 开启 training=True 触发隐空间对抗梯度生成
+                    output = self.model(input_tensor, training=True)
+                    total_loss, rec_l, proto_l, margin_l = compute_proto_loss(input_tensor, output)
 
                     loss_list.append(total_loss.item())
-                    rec_list.append(loss_rec.item())
-                    manifold_list.append(loss_manifold.item())
-
-                    pbar.set_postfix({
-                        'rec': f"{loss_rec.item():.4f}",
-                        'mani': f"{loss_manifold.item():.4f}",
-                    })
                     pbar.update(1)
+                    total_loss.backward()
+                    self.optimizer.step()
 
+            train_loss = np.average(loss_list)
+            vali_loss = self.vali(self.vali_loader)
+
+            torch.save(self.model.state_dict(), os.path.join(path, f"{self.dataset}_checkpoint.pth"))
             elapsed_time = time.time() - start_time
-            print(
-                f"Epoch: {epoch + 1} | Rec Loss: {np.mean(rec_list):.5f} |"
-                f" Manifold Loss: {np.mean(manifold_list):.5f} | Time: {elapsed_time:.2f}s"
-            )
-
-        save_file = os.path.join(self.model_save_path, f"{self.dataset}_checkpoint.pth")
-        torch.save(self.model.state_dict(), save_file)
-        print(f"[Model] Checkpoint saved successfully: {save_file}")
+            print(f"Epoch: {epoch + 1} | Train: {train_loss:.6f} | Vali: {vali_loss:.6f} | Time: {elapsed_time:.2f}s")
 
     def test(self):
-        ckpt = os.path.join(self.model_save_path, f"{self.dataset}_checkpoint.pth")
-        if not os.path.exists(ckpt):
-            raise FileNotFoundError(f"Checkpoint not found at: {ckpt}")
-
-        self.model.load_state_dict(torch.load(ckpt, map_location=self.device))
+        checkpoint_path = os.path.join(str(self.model_save_path), f"{self.dataset}_checkpoint.pth")
+        self.model.load_state_dict(torch.load(checkpoint_path, map_location=self.device), strict=False)
         self.model.eval()
+        temperature = 50.0  # 沿用之前的超参数温度设置
 
-        print("======================CALCULATE THRESHOLD======================")
-        thre_scores = []
+        print("======================TEST & ROOT CAUSE INFERENCE======================")
+
+        # 1. 动态阈值阶段：使用 Softmax 后的相对能量确定切分阈值
+        energy_list = []
         with torch.no_grad():
-            for input_data, _ in self.thre_loader:
-                x = input_data.float().contiguous().to(self.device)
-                _, time_score, _, _ = self.model(x)
-                step_score = time_score[:, -1].detach().cpu().numpy()
-                thre_scores.append(step_score)
+            for i, (input_data, _) in enumerate(self.thre_loader):
+                input_tensor = input_data.float().to(self.device)
+                output = self.model(input_tensor, training=False)
+                metric = compute_proto_loss(input_tensor, output, temperature=temperature, keep_batch=True)
+                energy_list.append(metric.detach().cpu().numpy())
 
-        thre_scores = np.concatenate(thre_scores, axis=0)
-        anomaly_threshold = np.percentile(thre_scores, 100 - self.anormly_ratio)
-        print(f"[Threshold] Selected Threshold: {anomaly_threshold:.4f}")
+        all_energy = np.concatenate(energy_list, axis=0).reshape(-1)
+        thresh = np.percentile(all_energy, 100 - self.anormly_ratio)
+        print("Anomaly Decision Threshold:", thresh)
 
-        print("======================TEST & EVALUATION======================")
-        test_scores = []
+        # 2. 真实测试集推断
         test_labels = []
-        all_attributions = []
+        test_energy_list = []
+        root_causes = []
 
         with torch.no_grad():
-            for input_data, labels in self.test_loader:
-                x = input_data.float().contiguous().to(self.device)
-                _, time_score, channel_attr, _ = self.model(x)
+            for i, (input_data, labels) in enumerate(self.test_loader):
+                input_tensor = input_data.float().to(self.device)
+                output = self.model(input_tensor, training=False)
 
-                step_score = time_score[:, -1].detach().cpu().numpy()
-                test_scores.append(step_score)
-                all_attributions.append(channel_attr.detach().cpu().numpy())
+                metric = compute_proto_loss(input_tensor, output, temperature=temperature, keep_batch=True)
+                test_energy_list.append(metric.detach().cpu().numpy())
+                test_labels.append(labels)
 
-                lbl = labels[:, -1].numpy() if labels.dim() > 1 else labels.numpy()
-                test_labels.append(lbl)
+                # 通道因果偏离 (定位 Top-3 受损传感器)
+                channel_err = output['causal_channel_diff'].detach().cpu().numpy()  # [B, L, C]
+                top_channels = np.argsort(-np.mean(channel_err, axis=1), axis=-1)[:, :3]
+                root_causes.append(top_channels)
 
-        test_scores = np.concatenate(test_scores, axis=0)
-        gt = np.concatenate(test_labels, axis=0).astype(int)
-        all_attributions = np.concatenate(all_attributions, axis=0)
+        test_energy = np.concatenate(test_energy_list, axis=0).reshape(-1)
+        test_labels = np.concatenate(test_labels, axis=0).reshape(-1)
+        pred = (test_energy > thresh).astype(int)
+        gt = test_labels.astype(int)
 
-        pred = (test_scores > anomaly_threshold).astype(int)
+        # Point Adjustment
+        anomaly_state = False
+        for i in range(len(gt)):
+            if gt[i] == 1 and pred[i] == 1 and not anomaly_state:
+                anomaly_state = True
+                for j in range(i, 0, -1):
+                    if gt[j] == 0: break
+                    pred[j] = 1
+                for j in range(i, len(gt)):
+                    if gt[j] == 0: break
+                    pred[j] = 1
+            elif gt[i] == 0:
+                anomaly_state = False
+            if anomaly_state:
+                pred[i] = 1
 
         acc = accuracy_score(gt, pred)
-        p, r, f1, _ = precision_recall_fscore_support(
-            gt, pred, average='binary', zero_division=0
-        )
-        roc = roc_auc_score(gt, test_scores)
-        prc = average_precision_score(gt, test_scores)
+        p, r, f1, _ = precision_recall_fscore_support(gt, pred, average='binary')
+        auc = roc_auc_score(gt, test_energy)
 
-        print("-" * 65)
-        print(f"[Strict Point-wise] Precision: {p:.4f} | Recall: {r:.4f} | F1: {f1:.4f}")
-        print(f"ROC-AUC: {roc:.4f} | AUPRC: {prc:.4f} | Accuracy: {acc:.4f}")
-
-        pred_pa = adjust_predictions(gt, pred)
-        p_pa, r_pa, f1_pa, _ = precision_recall_fscore_support(
-            gt, pred_pa, average='binary', zero_division=0
-        )
-        print(f"[Point-Adjusted]    Precision: {p_pa:.4f} | Recall: {r_pa:.4f} | F1: {f1_pa:.4f}")
-        print("-" * 65)
-
-        abnormal_indices = np.where(pred == 1)[0]
-        if len(abnormal_indices) > 0:
-            print("[Root Cause Attribution Demonstration]")
-            for sample_idx in abnormal_indices[:3]:
-                attr_sample = all_attributions[sample_idx]
-                attr_percent = (attr_sample / (np.sum(attr_sample) + 1e-8)) * 100
-                top_causes = np.argsort(-attr_percent)[:3]
-                print(f"  Step {sample_idx:05d} Fault Attribution:")
-                for rank, ch in enumerate(top_causes):
-                    print(
-                        f"    Top-{rank + 1} Cause: Channel {ch:02d}"
-                        f" (Contribution: {attr_percent[ch]:.2f}%)"
-                    )
-        print("=" * 65)
-
-        return acc, p, r, f1, prc
+        print(f"Accuracy: {acc:.4f} | Precision: {p:.4f} | Recall: {r:.4f} | F1-Score: {f1:.4f} | ROC-AUC: {auc:.4f}")
+        return acc, p, r, f1
