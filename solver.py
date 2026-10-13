@@ -38,8 +38,8 @@ class Solver(object):
     def __init__(self, config):
         self.__dict__.update(config)
 
-        # 保持 10 轮先快速验证
-        self.num_epochs = getattr(self, 'num_epochs', 10)
+        # 设为 30 轮，保证 Transformer 充分收敛
+        self.num_epochs = getattr(self, 'num_epochs', 30)
 
         # 1. 数据加载
         self.train_loader = get_loader_segment(
@@ -73,18 +73,21 @@ class Solver(object):
             self.device = torch.device('cpu')
         print(f"[Solver] Active Device: {self.device}")
 
-        # 3. 初始化 Transformer 级模型
+        # 3. 初始化大容量模型
         d_model = getattr(self, 'd_model', 128)
         num_codes = getattr(self, 'num_codes', 256)
+        n_layers = getattr(self, 'n_layers', 3)
+
         self.model = CEPNet(
             c_in=self.input_c,
             win_size=self.win_size,
             d_model=d_model,
             num_codes=num_codes,
+            n_layers=n_layers,
         ).to(self.device)
 
         total_params = sum(p.numel() for p in self.model.parameters())
-        print(f"[Model] Transformer CEPNet Loaded | Epochs: {self.num_epochs} | Params: {total_params:,}")
+        print(f"[Model] Scaled CEPNet | Epochs: {self.num_epochs} | Params: {total_params:,}")
 
         self.optimizer = torch.optim.AdamW(
             self.model.parameters(), lr=getattr(self, 'lr', 1e-3), weight_decay=1e-4
@@ -94,7 +97,7 @@ class Solver(object):
         )
 
     def train(self):
-        print("======================TRAIN CEP-Net (TRANSFORMER EMA-VQ)======================")
+        print("======================TRAIN CEP-Net (DEEP SCALED)======================")
         if not os.path.exists(self.model_save_path):
             os.makedirs(self.model_save_path)
 
@@ -151,7 +154,7 @@ class Solver(object):
     def test(self):
         ckpt = os.path.join(self.model_save_path, f"{self.dataset}_checkpoint.pth")
         if not os.path.exists(ckpt):
-            raise FileNotFoundError(f"Checkpoint not found: {ckpt}")
+            raise FileNotFoundError(f"Checkpoint not found at: {ckpt}")
 
         self.model.load_state_dict(torch.load(ckpt, map_location=self.device))
         self.model.eval()

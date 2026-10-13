@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 
 class EMAVectorQuantizer(nn.Module):
-    """全超球对齐的 EMA 离散词元库"""
+    """超球对齐的 EMA 离散词元库"""
     def __init__(self, num_codes=256, d_model=128, decay=0.99, eps=1e-5):
         super(EMAVectorQuantizer, self).__init__()
         self.num_codes = num_codes
@@ -19,7 +19,6 @@ class EMAVectorQuantizer(nn.Module):
         self.register_buffer('embedding_avg', embedding.clone())
 
     def forward(self, z):
-        # z: [B, L, D]
         B, L, D = z.shape
         z_norm = F.normalize(z, p=2, dim=-1)
         z_flat = z_norm.reshape(-1, D)
@@ -58,24 +57,21 @@ class EMAVectorQuantizer(nn.Module):
         return z_q, loss_commit, min_dist
 
 
-class SpatioTemporalBlock(nn.Module):
-    """
-    时空联合 Transformer 块：
-    显式建模 60 个时间步动力学与 128 维特征通道非线性拟合
-    """
+class TransformerBlock(nn.Module):
+    """标准工业级 Transformer 块：FFN 放大比设为 4，保证非线性容量充足"""
     def __init__(self, d_model=128, n_heads=4):
-        super(SpatioTemporalBlock, self).__init__()
+        super(TransformerBlock, self).__init__()
         self.attn = nn.MultiheadAttention(d_model, n_heads, batch_first=True)
         self.ffn = nn.Sequential(
-            nn.Linear(d_model, d_model * 2),
+            nn.Linear(d_model, d_model * 4),
             nn.GELU(),
-            nn.Linear(d_model * 2, d_model)
+            nn.Dropout(0.05),
+            nn.Linear(d_model * 4, d_model)
         )
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
 
     def forward(self, x):
-        # x: [B, L, D]
         attn_out, _ = self.attn(x, x, x)
         x = self.norm1(x + attn_out)
         ffn_out = self.ffn(x)
@@ -85,35 +81,45 @@ class SpatioTemporalBlock(nn.Module):
 
 class CEPNet(nn.Module):
     """
-    时空注意力反事实网络 (参数量 ~20 万级)
+    大容量反事实时空网络 (显式支撑 ~18 万参数量)
     """
-    def __init__(self, c_in=55, win_size=60, d_model=128, num_codes=256):
+    def __init__(self, c_in=55, win_size=60, d_model=128, num_codes=256, n_layers=3):
         super(CEPNet, self).__init__()
         self.c_in = c_in
         self.win_size = win_size
         self.d_model = d_model
 
-        # 1. 物理传感器投影与可学习时间位置编码
-        self.enc_in = nn.Linear(c_in, d_model)
+        # 1. 深度时空多通道投影头 (升维至 128)
+        self.enc_in = nn.Sequential(
+            nn.Linear(c_in, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model)
+        )
         self.pos_emb = nn.Parameter(torch.randn(1, win_size, d_model) * 0.02)
 
-        # 2. 深度时空编码器 (2 层 Transformer)
+        # 2. 深度编码器 (3 层 Transformer)
         self.encoder_blocks = nn.ModuleList([
-            SpatioTemporalBlock(d_model=d_model, n_heads=4)
-            for _ in range(2)
+            TransformerBlock(d_model=d_model, n_heads=4)
+            for _ in range(n_layers)
         ])
 
-        # 3. 超球 EMA 离散词元库
+        # 3. 超球 EMA 离散健康词元库
         self.quantizer = EMAVectorQuantizer(num_codes=num_codes, d_model=d_model)
 
-        # 4. 深度时空生成解码器 (2 层 Transformer)
+        # 4. 深度反事实解码器 (3 层 Transformer)
         self.decoder_blocks = nn.ModuleList([
-            SpatioTemporalBlock(d_model=d_model, n_heads=4)
-            for _ in range(2)
+            TransformerBlock(d_model=d_model, n_heads=4)
+            for _ in range(n_layers)
         ])
-        self.dec_out = nn.Linear(d_model, c_in)
 
-        # 5. 各通道物理刚度参数
+        # 5. 物理输出映射头
+        self.dec_out = nn.Sequential(
+            nn.Linear(d_model, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, c_in)
+        )
+
+        # 6. 各通道物理刚度参数 (恒正)
         self.log_lambda = nn.Parameter(torch.zeros(c_in))
 
     def freeze_codebook(self):
@@ -124,16 +130,16 @@ class CEPNet(nn.Module):
         # x: [B, L, C]
         B, L, C = x.shape
 
-        # 1. 映射至隐空间并注入时间位置编码
-        h = self.enc_in(x) + self.pos_emb  # [B, L, d_model]
+        # 1. 编码映射并注入时间位置编码
+        h = self.enc_in(x) + self.pos_emb
         for block in self.encoder_blocks:
             h = block(h)
         z = h
 
-        # 2. 离散基元纯净投影
+        # 2. 离散基元纯净投影 (彻底切断异常捷径)
         z_q, loss_commit, min_dist = self.quantizer(z)
 
-        # 3. 深度反事实时序波形生成
+        # 3. 深度反事实物理波形生成
         dh = z_q
         for block in self.decoder_blocks:
             dh = block(dh)
@@ -144,6 +150,7 @@ class CEPNet(nn.Module):
         intervention_effect = x - x_star
         weighted_energy = lambdas * (intervention_effect ** 2)
 
+        # 异常得分与通道归因
         time_score = torch.sum(weighted_energy, dim=-1) + 0.01 * min_dist
         channel_attribution = torch.mean(weighted_energy, dim=1)
 

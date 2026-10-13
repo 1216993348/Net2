@@ -1050,3 +1050,69 @@ train: (46653, 55)
 [Solver] Active Device: xpu
 [Model] Robust EMA-VQ CEPNet Loaded | Total Params: 13,582
 ======================TRAIN CEP-Net (STABLE TWO-STAGE EMA)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Active Device: xpu
+[Model] Transformer CEPNet Loaded | Epochs: 10 | Params: 41,038
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Active Device: xpu
+[Model] Scaled CEPNet | Epochs: 10 | Params: 85,198
+======================TRAIN CEP-Net (DEEP SCALED)======================
+Epoch: 1 | Rec Loss: 0.53459 | Commit Loss: 0.00277 | Time: 49.15s
