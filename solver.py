@@ -38,8 +38,8 @@ class Solver(object):
     def __init__(self, config):
         self.__dict__.update(config)
 
-        # 训练 25 轮，留足拟合空间
-        self.num_epochs = getattr(self, 'num_epochs', 25)
+        # 保持 10 轮先快速验证
+        self.num_epochs = getattr(self, 'num_epochs', 10)
 
         # 1. 数据加载
         self.train_loader = get_loader_segment(
@@ -73,7 +73,7 @@ class Solver(object):
             self.device = torch.device('cpu')
         print(f"[Solver] Active Device: {self.device}")
 
-        # 3. 初始化扩容模型 (d_model=128, num_codes=256)
+        # 3. 初始化 Transformer 级模型
         d_model = getattr(self, 'd_model', 128)
         num_codes = getattr(self, 'num_codes', 256)
         self.model = CEPNet(
@@ -84,7 +84,7 @@ class Solver(object):
         ).to(self.device)
 
         total_params = sum(p.numel() for p in self.model.parameters())
-        print(f"[Model] Scaled CEPNet | Epochs: {self.num_epochs} | Params: {total_params:,}")
+        print(f"[Model] Transformer CEPNet Loaded | Epochs: {self.num_epochs} | Params: {total_params:,}")
 
         self.optimizer = torch.optim.AdamW(
             self.model.parameters(), lr=getattr(self, 'lr', 1e-3), weight_decay=1e-4
@@ -94,7 +94,7 @@ class Solver(object):
         )
 
     def train(self):
-        print("======================TRAIN CEP-Net (SCALED CAPACITY)======================")
+        print("======================TRAIN CEP-Net (TRANSFORMER EMA-VQ)======================")
         if not os.path.exists(self.model_save_path):
             os.makedirs(self.model_save_path)
 
@@ -167,7 +167,7 @@ class Solver(object):
 
         thre_scores = np.concatenate(thre_scores, axis=0)
         anomaly_threshold = np.percentile(thre_scores, 100 - self.anormly_ratio)
-        print(f"[Threshold] Selected Threshold: {anomaly_threshold:.4f}")
+        print(f"[Threshold] Selected Cutoff: {anomaly_threshold:.4f}")
 
         print("======================TEST & EVALUATION======================")
         test_scores = []

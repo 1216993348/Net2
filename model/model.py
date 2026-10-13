@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 
 class EMAVectorQuantizer(nn.Module):
-    """超球对齐的 EMA 离散词元库"""
+    """全超球对齐的 EMA 离散词元库"""
     def __init__(self, num_codes=256, d_model=128, decay=0.99, eps=1e-5):
         super(EMAVectorQuantizer, self).__init__()
         self.num_codes = num_codes
@@ -19,6 +19,7 @@ class EMAVectorQuantizer(nn.Module):
         self.register_buffer('embedding_avg', embedding.clone())
 
     def forward(self, z):
+        # z: [B, L, D]
         B, L, D = z.shape
         z_norm = F.normalize(z, p=2, dim=-1)
         z_flat = z_norm.reshape(-1, D)
@@ -38,7 +39,6 @@ class EMAVectorQuantizer(nn.Module):
             self.cluster_size.data.mul_(self.decay).add_(new_cluster_size, alpha=1 - self.decay)
             self.embedding_avg.data.mul_(self.decay).add_(new_embedding_avg, alpha=1 - self.decay)
 
-            # 死码重置
             dead_codes = self.cluster_size < 1e-2
             if dead_codes.any():
                 n_dead = dead_codes.sum().item()
@@ -54,13 +54,38 @@ class EMAVectorQuantizer(nn.Module):
         loss_commit = F.mse_loss(z_norm, z_q.detach())
         z_q = z_norm + (z_q - z_norm).detach()
         min_dist = torch.min(dists, dim=1)[0].reshape(B, L)
+
         return z_q, loss_commit, min_dist
+
+
+class SpatioTemporalBlock(nn.Module):
+    """
+    时空联合 Transformer 块：
+    显式建模 60 个时间步动力学与 128 维特征通道非线性拟合
+    """
+    def __init__(self, d_model=128, n_heads=4):
+        super(SpatioTemporalBlock, self).__init__()
+        self.attn = nn.MultiheadAttention(d_model, n_heads, batch_first=True)
+        self.ffn = nn.Sequential(
+            nn.Linear(d_model, d_model * 2),
+            nn.GELU(),
+            nn.Linear(d_model * 2, d_model)
+        )
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+
+    def forward(self, x):
+        # x: [B, L, D]
+        attn_out, _ = self.attn(x, x, x)
+        x = self.norm1(x + attn_out)
+        ffn_out = self.ffn(x)
+        x = self.norm2(x + ffn_out)
+        return x
 
 
 class CEPNet(nn.Module):
     """
-    大容量反事实流形网络：
-    引入多尺度膨胀因果卷积与 128 维特征流形，参数量提升至 ~20 万
+    时空注意力反事实网络 (参数量 ~20 万级)
     """
     def __init__(self, c_in=55, win_size=60, d_model=128, num_codes=256):
         super(CEPNet, self).__init__()
@@ -68,46 +93,27 @@ class CEPNet(nn.Module):
         self.win_size = win_size
         self.d_model = d_model
 
-        # 1. 深度时空多尺度编码器 (捕获局部高频与全局周期)
-        self.enc_in = nn.Conv1d(c_in, d_model, kernel_size=1)
-        self.enc_block1 = nn.Sequential(
-            nn.Conv1d(d_model, d_model, kernel_size=3, padding=1, dilation=1),
-            nn.GroupNorm(8, d_model),
-            nn.GELU()
-        )
-        self.enc_block2 = nn.Sequential(
-            nn.Conv1d(d_model, d_model, kernel_size=3, padding=2, dilation=2),
-            nn.GroupNorm(8, d_model),
-            nn.GELU()
-        )
-        self.enc_block3 = nn.Sequential(
-            nn.Conv1d(d_model, d_model, kernel_size=3, padding=4, dilation=4),
-            nn.GroupNorm(8, d_model),
-            nn.GELU()
-        )
+        # 1. 物理传感器投影与可学习时间位置编码
+        self.enc_in = nn.Linear(c_in, d_model)
+        self.pos_emb = nn.Parameter(torch.randn(1, win_size, d_model) * 0.02)
 
-        # 2. 扩容离散词元库
+        # 2. 深度时空编码器 (2 层 Transformer)
+        self.encoder_blocks = nn.ModuleList([
+            SpatioTemporalBlock(d_model=d_model, n_heads=4)
+            for _ in range(2)
+        ])
+
+        # 3. 超球 EMA 离散词元库
         self.quantizer = EMAVectorQuantizer(num_codes=num_codes, d_model=d_model)
 
-        # 3. 增强解码器 (利用多尺度特征逆向合成波形)
-        self.dec_block1 = nn.Sequential(
-            nn.Conv1d(d_model, d_model, kernel_size=3, padding=4, dilation=4),
-            nn.GroupNorm(8, d_model),
-            nn.GELU()
-        )
-        self.dec_block2 = nn.Sequential(
-            nn.Conv1d(d_model, d_model, kernel_size=3, padding=2, dilation=2),
-            nn.GroupNorm(8, d_model),
-            nn.GELU()
-        )
-        self.dec_block3 = nn.Sequential(
-            nn.Conv1d(d_model, d_model, kernel_size=3, padding=1, dilation=1),
-            nn.GroupNorm(8, d_model),
-            nn.GELU()
-        )
-        self.dec_out = nn.Conv1d(d_model, c_in, kernel_size=1)
+        # 4. 深度时空生成解码器 (2 层 Transformer)
+        self.decoder_blocks = nn.ModuleList([
+            SpatioTemporalBlock(d_model=d_model, n_heads=4)
+            for _ in range(2)
+        ])
+        self.dec_out = nn.Linear(d_model, c_in)
 
-        # 4. 可学习通道刚度参数
+        # 5. 各通道物理刚度参数
         self.log_lambda = nn.Parameter(torch.zeros(c_in))
 
     def freeze_codebook(self):
@@ -115,25 +121,23 @@ class CEPNet(nn.Module):
         print("[Model] Stage 2: Codebook permanently FROZEN.")
 
     def forward(self, x):
+        # x: [B, L, C]
         B, L, C = x.shape
-        x_trans = x.transpose(1, 2).contiguous()
 
-        # 1. 连续流形编码
-        h = self.enc_in(x_trans)
-        h = h + self.enc_block1(h)
-        h = h + self.enc_block2(h)
-        h = h + self.enc_block3(h)
-        z = h.transpose(1, 2).contiguous()
+        # 1. 映射至隐空间并注入时间位置编码
+        h = self.enc_in(x) + self.pos_emb  # [B, L, d_model]
+        for block in self.encoder_blocks:
+            h = block(h)
+        z = h
 
         # 2. 离散基元纯净投影
         z_q, loss_commit, min_dist = self.quantizer(z)
 
-        # 3. 反事实物理基准生成 X*
-        qh = z_q.transpose(1, 2).contiguous()
-        qh = qh + self.dec_block1(qh)
-        qh = qh + self.dec_block2(qh)
-        qh = qh + self.dec_block3(qh)
-        x_star = self.dec_out(qh).transpose(1, 2).contiguous()
+        # 3. 深度反事实时序波形生成
+        dh = z_q
+        for block in self.decoder_blocks:
+            dh = block(dh)
+        x_star = self.dec_out(dh)  # [B, L, C]
 
         # 4. Pearl 个体因果干预效应 (ITE)
         lambdas = F.softplus(self.log_lambda)
