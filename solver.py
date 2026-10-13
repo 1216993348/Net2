@@ -14,7 +14,6 @@ from data_factory.data_loader import get_loader_segment
 
 
 def adjust_predictions(gt, pred):
-    """Point Adjustment 协议实现"""
     adjusted_pred = pred.copy()
     anomaly_state = False
     for i in range(len(gt)):
@@ -62,18 +61,18 @@ class Solver(object):
             dataset=self.dataset,
         )
 
-        # 2. 硬件设备探测
+        # 2. 计算设备绑定
         if hasattr(torch, 'xpu') and torch.xpu.is_available():
             self.device = torch.device('xpu')
         elif torch.cuda.is_available():
             self.device = torch.device(f"cuda:{self.gpu}")
         else:
             self.device = torch.device('cpu')
-        print(f"[Solver] Execution Device: {self.device}")
+        print(f"[Solver] Active Device: {self.device}")
 
-        # 3. 初始化模型
-        num_codes = getattr(self, 'num_codes', 128)
+        # 3. 初始化加固版模型
         d_model = getattr(self, 'd_model', 64)
+        num_codes = getattr(self, 'num_codes', 128)
         self.model = CEPNet(
             c_in=self.input_c,
             win_size=self.win_size,
@@ -82,28 +81,28 @@ class Solver(object):
         ).to(self.device)
 
         total_params = sum(p.numel() for p in self.model.parameters())
-        print(
-            f"[Model] CEPNet Initialized | Num Codes: {num_codes} | Params:"
-            f" {total_params:,}"
-        )
+        print(f"[Model] Robust EMA-VQ CEPNet Loaded | Total Params: {total_params:,}")
 
-        # 建议将 lr 从默认调到 1e-4 或 2e-4
-        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=getattr(self, 'lr', 1e-4), weight_decay=1e-4)
+        # 学习率推荐 5e-4，配合平滑梯度裁剪
+        self.optimizer = torch.optim.AdamW(
+            self.model.parameters(), lr=getattr(self, 'lr', 5e-4), weight_decay=1e-4
+        )
 
     def train(self):
-        print(
-            "======================TRAIN CEP-Net (PURE GENERATIVE VQ)======================"
-        )
+        print("======================TRAIN CEP-Net (STABLE TWO-STAGE EMA)======================")
         if not os.path.exists(self.model_save_path):
             os.makedirs(self.model_save_path)
 
         train_steps = len(self.train_loader)
+        freeze_epoch = int(self.num_epochs * 0.7)
 
         for epoch in range(self.num_epochs):
+            if epoch == freeze_epoch:
+                self.model.freeze_codebook()
+
             start_time = time.time()
-            loss_list = []
             rec_list = []
-            vq_list = []
+            commit_list = []
             self.model.train()
 
             with tqdm(
@@ -112,50 +111,42 @@ class Solver(object):
                 ncols=100,
             ) as pbar:
                 for i, (input_data, _) in enumerate(self.train_loader):
-                    # 确保张量在转入显存前内存连续
                     x = input_data.float().contiguous().to(self.device)
 
                     self.optimizer.zero_grad()
-                    x_star, _, _, vq_loss = self.model(x)
+                    x_star, _, _, loss_commit = self.model(x)
 
                     loss_rec = torch.mean((x - x_star) ** 2)
-                    total_loss = loss_rec + vq_loss
+                    total_loss = loss_rec + 0.25 * loss_commit
 
                     total_loss.backward()
-                    torch.nn.utils.clip_grad_norm_(
-                        self.model.parameters(), max_norm=5.0
-                    )
+                    # 严格裁剪梯度范数
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
                     self.optimizer.step()
 
-                    loss_list.append(total_loss.item())
                     rec_list.append(loss_rec.item())
-                    vq_list.append(vq_loss.item())
+                    commit_list.append(loss_commit.item())
 
                     pbar.set_postfix({
-                        'loss': f"{total_loss.item():.4f}",
                         'rec': f"{loss_rec.item():.4f}",
-                        'vq': f"{vq_loss.item():.4f}",
+                        'commit': f"{loss_commit.item():.4f}",
                     })
                     pbar.update(1)
 
             elapsed_time = time.time() - start_time
             print(
-                f"Epoch: {epoch + 1} | Train Loss: {np.mean(loss_list):.5f} | "
-                f"Rec Loss: {np.mean(rec_list):.5f} | VQ Loss: {np.mean(vq_list):.5f} | Time: {elapsed_time:.2f}s"
+                f"Epoch: {epoch + 1} | Rec Loss: {np.mean(rec_list):.5f} |"
+                f" Commit Loss: {np.mean(commit_list):.5f} | Time: {elapsed_time:.2f}s"
             )
 
-        save_file = os.path.join(
-            self.model_save_path, f"{self.dataset}_checkpoint.pth"
-        )
+        save_file = os.path.join(self.model_save_path, f"{self.dataset}_checkpoint.pth")
         torch.save(self.model.state_dict(), save_file)
-        print(f"[Model] Checkpoint successfully saved to: {save_file}")
+        print(f"[Model] Checkpoint saved successfully: {save_file}")
 
     def test(self):
-        ckpt = os.path.join(
-            self.model_save_path, f"{self.dataset}_checkpoint.pth"
-        )
+        ckpt = os.path.join(self.model_save_path, f"{self.dataset}_checkpoint.pth")
         if not os.path.exists(ckpt):
-            raise FileNotFoundError(f"Checkpoint not found at: {ckpt}")
+            raise FileNotFoundError(f"Checkpoint not found: {ckpt}")
 
         self.model.load_state_dict(torch.load(ckpt, map_location=self.device))
         self.model.eval()
@@ -187,11 +178,7 @@ class Solver(object):
                 test_scores.append(step_score)
                 all_attributions.append(channel_attr.detach().cpu().numpy())
 
-                lbl = (
-                    labels[:, -1].numpy()
-                    if labels.dim() > 1
-                    else labels.numpy()
-                )
+                lbl = labels[:, -1].numpy() if labels.dim() > 1 else labels.numpy()
                 test_labels.append(lbl)
 
         test_scores = np.concatenate(test_scores, axis=0)
@@ -208,33 +195,25 @@ class Solver(object):
         prc = average_precision_score(gt, test_scores)
 
         print("-" * 65)
-        print(
-            f"[Strict Point-wise] Precision: {p:.4f} | Recall: {r:.4f} | F1:"
-            f" {f1:.4f}"
-        )
+        print(f"[Strict Point-wise] Precision: {p:.4f} | Recall: {r:.4f} | F1: {f1:.4f}")
         print(f"ROC-AUC: {roc:.4f} | AUPRC: {prc:.4f} | Accuracy: {acc:.4f}")
 
         pred_pa = adjust_predictions(gt, pred)
         p_pa, r_pa, f1_pa, _ = precision_recall_fscore_support(
             gt, pred_pa, average='binary', zero_division=0
         )
-        print(
-            f"[Point-Adjusted]    Precision: {p_pa:.4f} | Recall: {r_pa:.4f} |"
-            f" F1: {f1_pa:.4f}"
-        )
+        print(f"[Point-Adjusted]    Precision: {p_pa:.4f} | Recall: {r_pa:.4f} | F1: {f1_pa:.4f}")
         print("-" * 65)
 
-        # 根因分析输出
+        # 根因分析输出演示
         abnormal_indices = np.where(pred == 1)[0]
         if len(abnormal_indices) > 0:
             print("[Root Cause Attribution Demonstration]")
             for sample_idx in abnormal_indices[:3]:
                 attr_sample = all_attributions[sample_idx]
-                attr_percent = (
-                    attr_sample / (np.sum(attr_sample) + 1e-8)
-                ) * 100
+                attr_percent = (attr_sample / (np.sum(attr_sample) + 1e-8)) * 100
                 top_causes = np.argsort(-attr_percent)[:3]
-                print(f"  Step {sample_idx:05d} Triggered Fault:")
+                print(f"  Step {sample_idx:05d} Fault Attribution:")
                 for rank, ch in enumerate(top_causes):
                     print(
                         f"    Top-{rank + 1} Cause: Channel {ch:02d}"

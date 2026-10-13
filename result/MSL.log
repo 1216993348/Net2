@@ -882,3 +882,171 @@ train: (46653, 55)
 [Solver] Execution Device: xpu
 [Model] CEPNet Initialized | Num Codes: 128 | Params: 27,182
 ======================TRAIN CEP-Net (PURE GENERATIVE VQ)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: xpu
+[Model] CEPNet Initialized | d_model: 32 | Layers: 2 | Params: 33,582
+======================TRAIN CEP-Net (PROMPT GENERATIVE)======================
+Epoch: 1 | Rec Loss: 0.60558 | Time: 20.67s
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: xpu
+[Model] DiT Diffusion Loaded | d_model: 32 | Params: 48,686
+======================TRAIN DIFFUSION COUNTERFACTUAL NET======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: xpu
+[Model] DiT Diffusion Loaded | d_model: 32 | Params: 48,686
+======================TRAIN DIFFUSION COUNTERFACTUAL NET======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Device: xpu
+[Model] EMA-VQ CEPNet Loaded | Params: 13,582
+======================TRAIN CEP-Net (TWO-STAGE EMA-VQ)======================
+Epoch: 1 | Rec Loss: 0.56059 | Commit Loss: 0.14610 | Time: 13.98s
+Epoch: 2 | Rec Loss: 0.39703 | Commit Loss: 0.13268 | Time: 13.53s
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Active Device: xpu
+[Model] Robust EMA-VQ CEPNet Loaded | Total Params: 13,582
+======================TRAIN CEP-Net (STABLE TWO-STAGE EMA)======================
