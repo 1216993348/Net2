@@ -1247,3 +1247,337 @@ Epoch: 1 | Train: 2.451053 | Vali: 1.827250 | Time: 31.29s
 ======================TEST & ROOT CAUSE INFERENCE======================
 Anomaly Decision Threshold: 0.4003508739471493
 Accuracy: 0.9851 | Precision: 0.9259 | Recall: 0.9330 | F1-Score: 0.9295 | ROC-AUC: 0.4399
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 2.451053 | Vali: 1.827250 | Time: 28.81s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.4003508739471493
+Accuracy: 0.9851 | Precision: 0.9259 | Recall: 0.9330 | F1-Score: 0.9295 | ROC-AUC: 0.4399
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 2.451053 | Vali: 1.827250 | Time: 31.05s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.4003508739471493
+Accuracy: 0.9851 | Precision: 0.9259 | Recall: 0.9330 | F1-Score: 0.9295 | ROC-AUC: 0.4399
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+margin_loss:0.0
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 2.936105 | Vali: 2.761849 | Time: 31.86s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.40239937993884173
+Accuracy: 0.9868 | Precision: 0.9289 | Recall: 0.9473 | F1-Score: 0.9380 | ROC-AUC: 0.4396
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 7.852336 | Vali: 3.057916 | Time: 31.48s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.35195458585024386
+Accuracy: 0.9847 | Precision: 0.9226 | Recall: 0.9330 | F1-Score: 0.9278 | ROC-AUC: 0.4393
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 4.852336 | Vali: 3.057916 | Time: 31.53s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.35195458585024386
+Accuracy: 0.9847 | Precision: 0.9226 | Recall: 0.9330 | F1-Score: 0.9278 | ROC-AUC: 0.4393

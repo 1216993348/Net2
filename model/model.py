@@ -127,6 +127,7 @@ class ProtoCausalAD(nn.Module):
 
         # 强制对抗难负例与原型中心保持至少 margin 的几何安全裕度
         margin_loss = torch.mean(F.relu(self.margin - min_dist))
+
         return margin_loss
 
     def forward(self, x, training=False):
@@ -145,6 +146,11 @@ class ProtoCausalAD(nn.Module):
         # 4. 训练阶段的对抗流形边界优化
         margin_loss = torch.tensor(0.0, device=x.device)
         if training:
+            # 观察干净样本在隐空间到最近原型的自然距离
+            _, _, D = z.shape
+            dist_clean = torch.cdist(z.view(-1, D), self.proto_bank.prototypes, p=2)
+            d_min = dist_clean.min(dim=-1)[0].mean().item()
+
             z_adv = self.generate_adversarial_perturbation(z)
             margin_loss = self.compute_adv_margin_loss(z_adv)
 

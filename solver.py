@@ -30,7 +30,7 @@ def compute_proto_loss(input_data, output, temperature=50.0, keep_batch=False):
     else:
         # ===== 训练阶段：联合标量损失 =====
         rec_loss = torch.mean((input_data - rec_x) ** 2)
-        total_loss = rec_loss + 0.1 * proto_loss + 0.1 * margin_loss
+        total_loss = rec_loss + 0.1 * proto_loss + 1 * margin_loss
         return total_loss, rec_loss, proto_loss, margin_loss
 
 class Solver(object):
@@ -67,7 +67,7 @@ class Solver(object):
             d_model=self.d_model,
             e_layers=self.e_layers,
             num_prototypes=getattr(self, 'num_prototypes', 5),
-            margin=getattr(self, 'margin', 2.0),
+            margin=getattr(self, 'margin', 5.0),
             epsilon=getattr(self, 'epsilon', 0.05),
             dev=self.device
         ).to(self.device)
