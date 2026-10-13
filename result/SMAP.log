@@ -1,0 +1,308 @@
+------------ Options -------------
+anormly_ratio: 0.72
+batch_size: 64
+config: config/SMAP.conf
+d_model: 128
+data_path: dataset/SMAP
+dataset: SMAP
+e_layers: 3
+fr: 0.3
+gpu: 0
+input_c: 25
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 25
+seed: 1
+seq_size: 10
+tr: 0.65
+win_size: 100
+-------------- End ----------------
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 1689 | Train Loss: 0.0000000 Vali Loss: 0.0000000 | Time: 35.05s | Memory Usage: 48.52MB
+======================TEST MODE======================
+Threshold : 0.38779923551082635
+pred:    (427600,)
+gt:      (427600,)
+pred:  (427600,)
+gt:    (427600,)
+Accuracy : 0.9922, Precision : 0.9483, Recall : 0.9930, F-score : 0.9702 
+
+------------ Options -------------
+anormly_ratio: 0.72
+batch_size: 64
+config: config/SMAP.conf
+d_model: 128
+data_path: dataset/SMAP
+dataset: SMAP
+e_layers: 3
+fr: 0.3
+gpu: 0
+input_c: 25
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 25
+seed: 1
+seq_size: 10
+tr: 0.65
+win_size: 100
+-------------- End ----------------
+------------ Options -------------
+anormly_ratio: 0.72
+batch_size: 64
+config: config/SMAP.conf
+d_model: 128
+data_path: dataset/SMAP
+dataset: SMAP
+e_layers: 3
+fr: 0.3
+gpu: 0
+input_c: 25
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 25
+seed: 1
+seq_size: 10
+tr: 0.65
+win_size: 100
+-------------- End ----------------
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+======================TRAIN MODE======================
+------------ Options -------------
+anormly_ratio: 0.72
+batch_size: 64
+config: config/SMAP.conf
+d_model: 128
+data_path: dataset/SMAP
+dataset: SMAP
+e_layers: 3
+fr: 0.3
+gpu: 0
+input_c: 25
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 25
+seed: 1
+seq_size: 10
+tr: 0.65
+win_size: 100
+-------------- End ----------------
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 1689 | Train Loss: 0.0000000 Vali Loss: 0.0000000 | Time: 249.55s | Memory Usage: 0.00MB
+======================TEST MODE======================
+Threshold : 0.9742146730422974
+pred:    (427600,)
+gt:      (427600,)
+pred:  (427600,)
+gt:    (427600,)
+Accuracy : 0.9805, Precision : 0.9506, Recall : 0.8937, F-score : 0.9213 
+------------ Options -------------
+anormly_ratio: 0.72
+batch_size: 64
+config: config/SMAP.conf
+d_model: 128
+data_path: dataset/SMAP
+dataset: SMAP
+e_layers: 3
+fr: 0.3
+gpu: 0
+input_c: 25
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 25
+seed: 1
+seq_size: 10
+tr: 0.65
+win_size: 100
+-------------- End ----------------
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+======================TRAIN MODE======================
+------------ Options -------------
+anormly_ratio: 0.72
+batch_size: 64
+config: config/SMAP.conf
+d_model: 128
+data_path: dataset/SMAP
+dataset: SMAP
+e_layers: 3
+fr: 0.3
+gpu: 0
+input_c: 25
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 25
+seed: 1
+seq_size: 10
+tr: 0.65
+win_size: 100
+-------------- End ----------------
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 1689 | Train Loss: 0.0000000 Vali Loss: 0.0000000 | Time: 262.14s | Memory Usage: 0.00MB
+======================TEST MODE======================
+Threshold : 0.5370411185741533
+pred:    (427600,)
+gt:      (427600,)
+pred:  (427600,)
+gt:    (427600,)
+Accuracy : 0.9903, Precision : 0.9445, Recall : 0.9818, F-score : 0.9628 
+------------ Options -------------
+anormly_ratio: 0.72
+batch_size: 64
+config: config/SMAP.conf
+d_model: 128
+data_path: dataset/SMAP
+dataset: SMAP
+e_layers: 3
+fr: 0.3
+gpu: 0
+input_c: 25
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 25
+seed: 1
+seq_size: 10
+tr: 0.65
+win_size: 100
+-------------- End ----------------
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 1689 | Train Loss: 0.0000000 Vali Loss: 0.0000000 | Time: 220.92s | Memory Usage: 0.00MB
+======================TEST MODE======================
+Threshold : 0.9866180556774143
+pred:    (427600,)
+gt:      (427600,)
+pred:  (427600,)
+gt:    (427600,)
+Accuracy : 0.9917, Precision : 0.9480, Recall : 0.9896, F-score : 0.9684 
+------------ Options -------------
+anormly_ratio: 0.72
+batch_size: 64
+config: config/SMAP.conf
+d_model: 128
+data_path: dataset/SMAP
+dataset: SMAP
+e_layers: 3
+fr: 0.3
+gpu: 0
+input_c: 25
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 25
+seed: 1
+seq_size: 10
+tr: 0.65
+win_size: 100
+-------------- End ----------------
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 1689 | Train Loss: 0.0000000 Vali Loss: 0.0000000 | Time: 218.01s | Memory Usage: 0.00MB
+======================TEST MODE======================
+Threshold : 0.9993047413825991
+pred:    (427600,)
+gt:      (427600,)
+pred:  (427600,)
+gt:    (427600,)
+Accuracy : 0.9923, Precision : 0.9623, Recall : 0.9785, F-score : 0.9703 
+
+
+Seed: 18 (19/100)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+[Solver] Using execution device: cuda:0
+[Model] Total params: 662,169 (0.66M)
+[Model] Trainable params: 662,169 (0.66M)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 1689 | Train Loss: 10.2551763 Vali Loss: 9.1899818 | Time: 55.40s | Memory: 51.01MB
+======================TEST MODE======================
+Threshold : 0.21790913
+Accuracy : 0.9904, Precision : 0.9438, Recall : 0.9831, F-score : 0.9631
+
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+[Solver] Using execution device: cuda:0
+[Model] Total params: 662,169 (0.66M)
+[Model] Trainable params: 662,169 (0.66M)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 1689 | Train Loss: 10.1035539 Vali Loss: 9.1805457 | Time: 55.19s | Memory: 51.01MB
+======================TEST MODE======================
+Threshold : 0.17193204
+Accuracy : 0.9857, Precision : 0.9402, Recall : 0.9482, F-score : 0.9442

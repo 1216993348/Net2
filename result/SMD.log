@@ -1,0 +1,242 @@
+------------ Options -------------
+anormly_ratio: 0.42
+batch_size: 64
+config: config/SMD.conf
+d_model: 128
+data_path: dataset/SMD
+dataset: SMD
+e_layers: 3
+fr: 0.2
+gpu: 0
+input_c: 38
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 38
+seed: 1
+seq_size: 10
+tr: 0.05
+win_size: 100
+-------------- End ----------------
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 8854 | Train Loss: 0.0000000 Vali Loss: 0.0000000 | Time: 168.23s | Memory Usage: 55.62MB
+======================TEST MODE======================
+Threshold : 0.9097502585291838
+pred:    (708400,)
+gt:      (708400,)
+pred:  (708400,)
+gt:    (708400,)
+Accuracy : 0.9933, Precision : 0.9191, Recall : 0.9204, F-score : 0.9198
+
+------------ Options -------------
+anormly_ratio: 0.42
+batch_size: 64
+config: config/SMD.conf
+d_model: 128
+data_path: dataset/SMD
+dataset: SMD
+e_layers: 3
+fr: 0.2
+gpu: 0
+input_c: 38
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 38
+seed: 1
+seq_size: 10
+tr: 0.05
+win_size: 100
+-------------- End ----------------
+------------ Options -------------
+anormly_ratio: 0.42
+batch_size: 64
+config: config/SMD.conf
+d_model: 128
+data_path: dataset/SMD
+dataset: SMD
+e_layers: 3
+fr: 0.2
+gpu: 0
+input_c: 38
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 38
+seed: 1
+seq_size: 10
+tr: 0.05
+win_size: 100
+-------------- End ----------------
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 8854 | Train Loss: 0.0000000 Vali Loss: 0.0000000 | Time: 1215.17s | Memory Usage: 0.00MB
+======================TEST MODE======================
+Threshold : 0.9940774256944656
+pred:    (708400,)
+gt:      (708400,)
+pred:  (708400,)
+gt:    (708400,)
+Accuracy : 0.9910, Precision : 0.9125, Recall : 0.8674, F-score : 0.8893 
+ROC AUC   : 0.2906
+
+
+
+------------ Options -------------
+anormly_ratio: 0.42
+batch_size: 64
+config: config/SMD.conf
+d_model: 128
+data_path: dataset/SMD
+dataset: SMD
+e_layers: 3
+fr: 0.2
+gpu: 0
+input_c: 38
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 38
+print_tqdm: True
+seed: 1
+seq_size: 10
+tr: 0.05
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+[Solver] Using execution device: xpu
+======================TRAIN MODE======================
+Epoch: 1, Steps: 8854 | Train Loss: 0.0013619 Vali Loss: 0.0010328 | Time: 1305.93s | Memory: 0.00MB
+======================TEST MODE======================
+Threshold : 0.8909293584227553
+Accuracy : 0.9889, Precision : 0.9051, Recall : 0.8194, F-score : 0.8601
+ROC AUC   : 0.4941
+
+
+
+------------ Options -------------
+anormly_ratio: 0.42
+batch_size: 64
+config: config/SMD.conf
+d_model: 32
+data_path: dataset/SMD
+dataset: SMD
+e_layers: 3
+fr: 0.2
+gpu: 0
+input_c: 38
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 38
+print_tqdm: True
+seed: 1
+seq_size: 10
+tr: 0.05
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+[Solver] Using execution device: xpu
+[Model] Total params: 54,086 (0.05M)
+[Model] Trainable params: 54,086 (0.05M)
+======================TRAIN MODE======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.42
+batch_size: 64
+config: config/SMD.conf
+d_model: 32
+data_path: dataset/SMD
+dataset: SMD
+e_layers: 3
+fr: 0.2
+gpu: 0
+input_c: 38
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 38
+print_tqdm: True
+seed: 1
+seq_size: 10
+tr: 0.05
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+[Solver] Using execution device: xpu
+[Model] Total params: 52,998 (0.05M)
+[Model] Trainable params: 52,998 (0.05M)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 8854 | Train Loss: 9.9557851 Vali Loss: 9.2727370 | Time: 1446.94s | Memory: 0.00MB
+======================TEST MODE======================
+Threshold : 0.42417760684490124
+Accuracy : 0.9932, Precision : 0.9226, Recall : 0.9123, F-score : 0.9174
+ROC AUC   : 0.2518
+
+
+Seed: 4 (5/100)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+[Solver] Using execution device: cuda:0
+[Model] Total params: 52,998 (0.05M)
+[Model] Trainable params: 52,998 (0.05M)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 8854 | Train Loss: 9.9715281 Vali Loss: 9.2607254 | Time: 261.19s | Memory: 41.94MB
+======================TEST MODE======================
+Threshold : 0.5025917
+Accuracy : 0.9944, Precision : 0.9203, Recall : 0.9463, F-score : 0.9331
+ROC AUC   : 0.2350
+F1=0.9331

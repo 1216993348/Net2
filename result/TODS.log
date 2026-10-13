@@ -1,0 +1,510 @@
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 1
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 1
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+[Solver] Using execution device: xpu
+[Model] Total params: 42,210 (0.04M)
+[Model] Trainable params: 42,210 (0.04M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 15
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 15
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+[Solver] Using execution device: xpu
+[Model] Total params: 46,704 (0.05M)
+[Model] Trainable params: 46,704 (0.05M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 15
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 15
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+[Solver] Using execution device: xpu
+[Model] Total params: 46,704 (0.05M)
+[Model] Trainable params: 46,704 (0.05M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 15
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 15
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+[Solver] Using execution device: xpu
+[Model] Total params: 46,704 (0.05M)
+[Model] Trainable params: 46,704 (0.05M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 15
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 15
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+[Solver] Using execution device: xpu
+[Model] Total params: 46,704 (0.05M)
+[Model] Trainable params: 46,704 (0.05M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+============================================================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 15
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 15
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+[Solver] Using execution device: xpu
+[Model] Total params: 46,704 (0.05M)
+[Model] Trainable params: 46,704 (0.05M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 15
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 15
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+[Solver] Using execution device: xpu
+[Model] Total params: 46,704 (0.05M)
+[Model] Trainable params: 46,704 (0.05M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 15
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 15
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+[Solver] Using execution device: xpu
+[Model] Total params: 46,704 (0.05M)
+[Model] Trainable params: 46,704 (0.05M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 15
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 15
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (5000, 15)
+train: (4000, 15)
+test: (5000, 15)
+train: (4000, 15)
+test: (5000, 15)
+train: (4000, 15)
+test: (5000, 15)
+train: (4000, 15)
+[Solver] Using execution device: xpu
+[Model] Total params: 46,704 (0.05M)
+[Model] Trainable params: 46,704 (0.05M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+============================================================
+[Dataset True Period (T_data)]  : 1 time steps
+Epoch: 1, Steps: 61 | Train Loss: 0.0111000 Vali Loss: 0.0098573 | Time: 39.34s | Memory: 0.00MB
+======================TEST MODE======================
+Threshold : 0.3544748129248622
+Accuracy : 0.9410, Precision : 0.0526, Recall : 0.0077, F-score : 0.0134
+ROC AUC   : 0.5019
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 15
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 15
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (5000, 15)
+train: (4000, 15)
+test: (5000, 15)
+train: (4000, 15)
+test: (5000, 15)
+train: (4000, 15)
+test: (5000, 15)
+train: (4000, 15)
+[Solver] Using execution device: xpu
+[Model] Total params: 46,704 (0.05M)
+[Model] Trainable params: 46,704 (0.05M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+============================================================
+[Dataset True Period (T_data)]  : 1 time steps
+Epoch: 1, Steps: 61 | Train Loss: 0.0111000 Vali Loss: 0.0098573 | Time: 39.29s | Memory: 0.00MB
+======================TEST MODE======================
+Threshold : 0.3544748129248622
+Accuracy : 0.9410, Precision : 0.0526, Recall : 0.0077, F-score : 0.0134
+ROC AUC   : 0.5019
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 1
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 1
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (75000, 1)
+train: (60000, 1)
+test: (75000, 1)
+train: (60000, 1)
+test: (75000, 1)
+train: (60000, 1)
+test: (75000, 1)
+train: (60000, 1)
+[Solver] Using execution device: xpu
+[Model] Total params: 42,210 (0.04M)
+[Model] Trainable params: 42,210 (0.04M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+============================================================
+[Dataset True Period (T_data)]  : 1 time steps
+Epoch: 1, Steps: 936 | Train Loss: 0.0005777 Vali Loss: 0.0028838 | Time: 214.16s | Memory: 0.00MB
+======================TEST MODE======================
+Threshold : 0.9994642297029496
+Accuracy : 0.9559, Precision : 0.7784, Recall : 0.4311, F-score : 0.5549
+ROC AUC   : 0.5225
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/TODS.conf
+d_model: 32
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 1
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 1
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (7782539, 1)
+train: (2857852, 1)
+test: (7782539, 1)
+train: (2857852, 1)
+test: (7782539, 1)
+train: (2857852, 1)
+test: (7782539, 1)
+train: (2857852, 1)
+[Solver] Using execution device: xpu
+[Model] Total params: 42,210 (0.04M)
+[Model] Trainable params: 42,210 (0.04M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+============================================================
+[Dataset True Period (T_data)]  : 1 time steps
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 4096
+config: config/TODS.conf
+d_model: 64
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 1
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 1
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (7782539, 1)
+train: (2857852, 1)
+test: (7782539, 1)
+train: (2857852, 1)
+test: (7782539, 1)
+train: (2857852, 1)
+test: (7782539, 1)
+train: (2857852, 1)
+[Solver] Using execution device: xpu
+[Model] Total params: 164,290 (0.16M)
+[Model] Trainable params: 164,290 (0.16M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+============================================================
+[Dataset True Period (T_data)]  : 1 time steps
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 2048
+config: config/TODS.conf
+d_model: 64
+data_path: dataset/TODS
+dataset: TODS
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 1
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 1
+print_tqdm: True
+seed: 65
+seq_size: 10
+tr: 0.55
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (7782539, 1)
+train: (2857852, 1)
+test: (7782539, 1)
+train: (2857852, 1)
+test: (7782539, 1)
+train: (2857852, 1)
+test: (7782539, 1)
+train: (2857852, 1)
+[Solver] Using execution device: xpu
+[Model] Total params: 164,290 (0.16M)
+[Model] Trainable params: 164,290 (0.16M)
+======================TRAIN MODE======================
+[Dataset Analysis] Analyzing dataset's intrinsic period...
+============================================================
+[Dataset True Period (T_data)]  : 1 time steps

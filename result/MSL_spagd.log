@@ -1,0 +1,276 @@
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 1
+  anormly_ratio: 0.9
+  batch_size: 64
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 32
+  e_layers: 3
+  mode: te
+  model_save_path: cpt
+============================================================
+[Solver] Device: cpu
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+====================== TRAIN ======================
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 1
+  anormly_ratio: 0.9
+  batch_size: 64
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 32
+  e_layers: 3
+  mode: te
+  model_save_path: cpt
+============================================================
+[Solver] Device: cpu
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 1
+  anormly_ratio: 0.9
+  batch_size: 64
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 32
+  e_layers: 3
+  mode: te
+  model_save_path: cpt
+============================================================
+[Solver] Device: cpu
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+====================== TRAIN ======================
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 1
+  anormly_ratio: 0.9
+  batch_size: 64
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 32
+  e_layers: 3
+  mode: te
+  model_save_path: cpt
+============================================================
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+====================== TRAIN ======================
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 1
+  anormly_ratio: 0.9
+  batch_size: 64
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 32
+  e_layers: 3
+  mode: te
+  model_save_path: cpt
+============================================================
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+====================== TRAIN ======================
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 1
+  anormly_ratio: 0.9
+  batch_size: 64
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 32
+  e_layers: 3
+  mode: te
+  model_save_path: cpt
+============================================================
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 30
+  anormly_ratio: 0.9
+  batch_size: 512
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 256
+  e_layers: 2
+  mode: te
+  model_save_path: cpt
+============================================================
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+====================== TRAIN ======================
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 5
+  anormly_ratio: 0.9
+  batch_size: 256
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 256
+  e_layers: 2
+  mode: te
+  model_save_path: cpt
+============================================================
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+====================== TRAIN ======================
+Epoch 1 | Avg Loss: 0.518354
+Epoch 2 | Avg Loss: 0.316914
+Epoch 3 | Avg Loss: 0.285512
+Epoch 4 | Avg Loss: 0.265002
+Epoch 5 | Avg Loss: 0.250368
+====================== TEST ======================
+Loaded checkpoint: cpt\MSL_checkpoint.pth
+Threshold (top 99.1%): 0.409428
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 1
+  anormly_ratio: 0.9
+  batch_size: 256
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 256
+  e_layers: 2
+  mode: te
+  model_save_path: cpt
+============================================================
+[Solver] Device: cpu
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+====================== TRAIN ======================
+Epoch 1 | Avg Loss: 0.520319
+====================== TEST ======================
+Loaded checkpoint: cpt\MSL_checkpoint.pth
+Total test samples: 737
+Threshold (top 10.0%): 0.000057
+
+========================================
+Results for MSL
+========================================
+Accuracy:  0.2266
+Precision: 0.1630
+Recall:    0.9565
+F1:        0.2785
+ROC AUC:   0.5240
+========================================
+============================================================
+SPAGD Configuration:
+  lr: 0.0001
+  gpu: 0
+  num_epochs: 10
+  anormly_ratio: 0.9
+  batch_size: 256
+  seed: 65
+  win_size: 100
+  input_c: 55
+  output_c: 55
+  dataset: MSL
+  data_path: dataset/MSL
+  d_model: 256
+  e_layers: 2
+  mode: te
+  model_save_path: cpt
+============================================================
+[Solver] Device: cpu
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+====================== TRAIN ======================
+Epoch 1 | Avg Loss: 0.520319
+Epoch 2 | Avg Loss: 0.318303
+Epoch 3 | Avg Loss: 0.286886
+Epoch 4 | Avg Loss: 0.266503
+Epoch 5 | Avg Loss: 0.250711
+Epoch 6 | Avg Loss: 0.241391
+Epoch 7 | Avg Loss: 0.226510
+Epoch 8 | Avg Loss: 0.217055
+Epoch 9 | Avg Loss: 0.207677
+Epoch 10 | Avg Loss: 0.198561
+====================== TEST ======================
+Loaded checkpoint: cpt\MSL_checkpoint.pth
+Total test samples: 737
+Threshold (top 10.0%): 0.000000
+
+========================================
+Results for MSL
+========================================
+Accuracy:  0.2334
+Precision: 0.1672
+Recall:    0.9826
+F1:        0.2857
+ROC AUC:   0.4609
+========================================

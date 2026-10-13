@@ -1,0 +1,884 @@
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 128
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+fr: 0.4
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+seed: 1
+seq_size: 10
+tr: 0.55
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+======================TRAIN MODE======================
+Epoch: 1, Steps: 728 | Train Loss: 0.0000000 Vali Loss: 0.0000000 | Time: 14.46s | Memory Usage: 52.90MB
+======================TEST MODE======================
+Threshold : 0.7427850399017364
+pred:    (73700,)
+gt:      (73700,)
+pred:  (73700,)
+gt:    (73700,)
+Accuracy : 0.9901, Precision : 0.9299, Recall : 0.9799, F-score : 0.9542
+
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 21,271 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 2.512181 | Vali: 1.883467 | Time: 43.25s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.3770989341437892
+Accuracy: 0.9849 | Precision: 0.9241 | Recall: 0.9330 | F1-Score: 0.9286 | ROC-AUC: 0.4402
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,703 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 2.555988 | Vali: 1.886257 | Time: 49.47s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.4512422337532095
+Accuracy: 0.9856 | Precision: 0.9309 | Recall: 0.9330 | F1-Score: 0.9320 | ROC-AUC: 0.4393
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,703 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 0.617930 | Vali: 0.553007 | Time: 45.00s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.3552332460284251
+Accuracy: 0.9856 | Precision: 0.9188 | Recall: 0.9473 | F1-Score: 0.9329 | ROC-AUC: 0.4374
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 20,221 (0.02M)
+======================TRAIN CAUSAL PROTO AD======================
+Epoch: 1 | Train: 2.367995 | Vali: 2.026796 | Time: 25.06s
+======================TEST & CAUSAL ROOT CAUSE EVALUATION======================
+Anomaly Decision Threshold: 0.3369526913464086
+Accuracy: 0.9861 | Precision: 0.9227 | Recall: 0.9473 | F1-Score: 0.9349 | ROC-AUC: 0.4859
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] CAAD Total params: 45,951 (0.05M)
+======================TRAIN CAAD (MULTI-SCALE ALIGNMENT)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] CAAD Total params: 45,951 (0.05M)
+======================TRAIN CAAD (MULTI-SCALE ALIGNMENT)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] CAAD Total params: 45,951 (0.05M)
+======================TRAIN CAAD (MULTI-SCALE ALIGNMENT)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] CAAD Total params: 45,951 (0.05M)
+======================TRAIN CAAD (MULTI-SCALE ALIGNMENT)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+[Model] CAAD Total params: 45,951 (0.05M)
+======================TRAIN CAAD (MULTI-SCALE ALIGNMENT)======================
+Epoch: 1 | Train Loss: 2.010785 | Time: 142.09s
+======================TEST & CAUSAL VERIFICATION======================
+[CAAD] Calibrating Normal Reference Graph M_n & Residual Statistics...
+[CAAD] Calibration completed. M_n Frobenius Norm: 3.0808
+[CAAD] Computing threshold on calibration split...
+[CAAD] Threshold tau (RCS q90): 2.0755 | Final Anomaly Cutoff: 450.2467
+Accuracy  : 0.8792
+Precision : 0.2500
+Recall    : 0.0494
+F1-Score  : 0.0825
+ROC-AUC   : 0.5996
+AUPRC     : 0.1491
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+[Model] CAAD Total params: 45,951 (0.05M)
+======================TRAIN CAAD (MULTI-SCALE ALIGNMENT)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+[Model] CAAD Total params: 45,951 (0.05M)
+======================TRAIN CAAD (MULTI-SCALE ALIGNMENT)======================
+Epoch: 1, Steps: 728 | Train Loss: 2.7254740 | Time: 106.26s | Memory: 0.00MB
+======================TEST & CAUSAL VERIFICATION======================
+[CAAD] Calibrating Normal Reference Graph M_n & Residual Statistics...
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: test
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+[Model] CAAD Total params: 45,951 (0.05M)
+======================TEST & CAUSAL VERIFICATION======================
+[CAAD] Calibrating Normal Reference Graph M_n & Residual Statistics...
+[CAAD] Calibration completed. M_n Frobenius Norm: 2.4550
+[CAAD] Computing threshold on calibration split...
+[CAAD] Threshold tau (RCS q90): 1.9410 | Final Anomaly Cutoff: 935.6386
+Accuracy  : 0.8860
+Precision : 0.4211
+Recall    : 0.0988
+F1-Score  : 0.1600
+ROC-AUC   : 0.6129
+AUPRC     : 0.1582
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: test
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: xpu
+[Model] Params: 15,018 (0.02M)
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: xpu
+[Model] Params: 15,018 (0.02M)
+======================TRAIN CEP-Net (COUNTERFACTUAL PROTOTYPE)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: cpu
+[Model] Params: 15,018 (0.02M)
+======================TRAIN CEP-Net (COUNTERFACTUAL PROTOTYPE)======================
+Epoch: 1 | Train Loss: 0.811411 | Time: 17.02s
+======================EVALUATE THRESHOLD & TEST======================
+[Threshold] Selected Cutoff: 119.8371
+--------------------------------------------------
+[Strict Point-wise] Precision: 0.2500 | Recall: 0.0494 | F1: 0.0825
+ROC-AUC: 0.5241 | AUPRC: 0.1571 | Accuracy: 0.8792
+[Point-Adjusted]    Precision: 0.5556 | Recall: 0.1852 | F1: 0.2778
+--------------------------------------------------
+[Root Cause Example @ Step 1]:
+  Top-1 Cause: Channel 43 (Contribution: 51.25%)
+  Top-2 Cause: Channel 47 (Contribution: 14.91%)
+  Top-3 Cause: Channel 11 (Contribution: 10.06%)
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: cpu
+[Model] Params: 15,018 (0.02M)
+======================TRAIN CEP-Net (COUNTERFACTUAL PROTOTYPE)======================
+Epoch: 1 | Train Loss: 0.811411 | Time: 17.30s
+======================EVALUATE THRESHOLD & TEST======================
+[Threshold] Selected Cutoff: 119.8371
+--------------------------------------------------
+[Strict Point-wise] Precision: 0.2500 | Recall: 0.0494 | F1: 0.0825
+ROC-AUC: 0.5241 | AUPRC: 0.1571 | Accuracy: 0.8792
+[Point-Adjusted]    Precision: 0.5556 | Recall: 0.1852 | F1: 0.2778
+--------------------------------------------------
+[Root Cause Example @ Step 1]:
+  Top-1 Cause: Channel 43 (Contribution: 51.25%)
+  Top-2 Cause: Channel 47 (Contribution: 14.91%)
+  Top-3 Cause: Channel 11 (Contribution: 10.06%)
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: cpu
+[Model] Params: 15,018 (0.02M)
+======================TRAIN CEP-Net (COUNTERFACTUAL PROTOTYPE)======================
+Epoch: 1 | Train Loss: 0.811411 | Time: 17.06s
+======================EVALUATE THRESHOLD & TEST======================
+[Threshold] Selected Cutoff: 119.8371
+--------------------------------------------------
+[Strict Point-wise] Precision: 0.2500 | Recall: 0.0494 | F1: 0.0825
+ROC-AUC: 0.5241 | AUPRC: 0.1571 | Accuracy: 0.8792
+[Point-Adjusted]    Precision: 0.5556 | Recall: 0.1852 | F1: 0.2778
+--------------------------------------------------
+[Root Cause Example @ Step 1]:
+  Top-1 Cause: Channel 43 (Contribution: 51.25%)
+  Top-2 Cause: Channel 47 (Contribution: 14.91%)
+  Top-3 Cause: Channel 11 (Contribution: 10.06%)
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: cpu
+[Model] Params: 15,018 (0.02M)
+======================TRAIN CEP-Net (COUNTERFACTUAL PROTOTYPE)======================
+Epoch: 1 | Train Loss: 0.811411 | Time: 17.03s
+Epoch: 2 | Train Loss: 0.615302 | Time: 19.57s
+Epoch: 3 | Train Loss: 0.608484 | Time: 19.35s
+Epoch: 4 | Train Loss: 0.598415 | Time: 23.58s
+Epoch: 5 | Train Loss: 0.578089 | Time: 25.80s
+Epoch: 6 | Train Loss: 0.558645 | Time: 19.76s
+Epoch: 7 | Train Loss: 0.534545 | Time: 26.45s
+Epoch: 8 | Train Loss: 0.505682 | Time: 26.30s
+Epoch: 9 | Train Loss: 0.471372 | Time: 26.22s
+Epoch: 10 | Train Loss: 0.432398 | Time: 26.88s
+======================EVALUATE THRESHOLD & TEST======================
+[Threshold] Selected Cutoff: 119.9651
+--------------------------------------------------
+[Strict Point-wise] Precision: 0.2500 | Recall: 0.0494 | F1: 0.0825
+ROC-AUC: 0.5300 | AUPRC: 0.1582 | Accuracy: 0.8792
+[Point-Adjusted]    Precision: 0.5556 | Recall: 0.1852 | F1: 0.2778
+--------------------------------------------------
+[Root Cause Example @ Step 1]:
+  Top-1 Cause: Channel 43 (Contribution: 51.32%)
+  Top-2 Cause: Channel 47 (Contribution: 14.94%)
+  Top-3 Cause: Channel 11 (Contribution: 10.03%)
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: cpu
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: xpu
+[Model] CEPNet Loaded | Num Codes: 128 | Params: 27,182
+======================TRAIN CEP-Net (PURE GENERATIVE VQ)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: xpu
+[Model] CEPNet Initialized | Num Codes: 128 | Params: 27,182
+======================TRAIN CEP-Net (PURE GENERATIVE VQ)======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 10
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Execution Device: xpu
+[Model] CEPNet Initialized | Num Codes: 128 | Params: 27,182
+======================TRAIN CEP-Net (PURE GENERATIVE VQ)======================

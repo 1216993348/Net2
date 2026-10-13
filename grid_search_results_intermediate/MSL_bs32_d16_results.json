@@ -1,0 +1,18 @@
+{
+  "batch_size": 32,
+  "d_model": 16,
+  "best_seed": 0,
+  "best_f_score": 0.9437213104445702,
+  "best_accuracy": 0.9878561736770692,
+  "best_precision": 0.9222072016713777,
+  "best_recall": 0.9662631985578162,
+  "total_seeds_tested": 1,
+  "all_seeds": {
+    "0": {
+      "accuracy": 0.9878561736770692,
+      "precision": 0.9222072016713777,
+      "recall": 0.9662631985578162,
+      "f_score": 0.9437213104445702
+    }
+  }
+}

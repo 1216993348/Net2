@@ -1,0 +1,66 @@
+
+def compute_discrepancy(input, output, temperature=1.0, keep_batch=False):
+    """
+    层级解耦（Hierarchical Decoupling）损失函数：
+    1. 宏观对抗：Trend vs (Cycle + Spike)
+    2. 微观对抗：Cycle vs Spike
+    """
+    trend_att, cycle_att, spike_att, rec_x,prior_loss = output
+
+    # 1. NaN 数值安全防御
+    # for u in range(len(trend_att)):
+    #     if torch.isnan(trend_att[u]).any(): trend_att[u] = torch.nan_to_num(trend_att[u], nan=0.0)
+    #     if torch.isnan(cycle_att[u]).any(): cycle_att[u] = torch.nan_to_num(cycle_att[u], nan=0.0)
+    #     if torch.isnan(spike_att[u]).any(): spike_att[u] = torch.nan_to_num(spike_att[u], nan=0.0)
+
+    adv_loss_total = 0.0
+    con_loss_total = 0.0
+    layers_num = len(trend_att)
+
+    for u in range(layers_num):
+        # 归一化 Attention 概率分布
+        trend_norm = trend_att[u] / torch.unsqueeze(torch.sum(trend_att[u], dim=-1) + 1e-6, dim=-1)
+        cycle_norm = cycle_att[u] / torch.unsqueeze(torch.sum(cycle_att[u], dim=-1) + 1e-6, dim=-1)
+        spike_norm = spike_att[u] / torch.unsqueeze(torch.sum(spike_att[u], dim=-1) + 1e-6, dim=-1)
+
+        # 🎯 残差部分的复合注意力：将微观的周期与高频融合，作为"残差总表达"
+        res_norm = (cycle_norm + spike_norm) / 2.0
+
+        if keep_batch:
+            # ===== 测试/评估阶段：保留 [B, L] 维数 =====
+            # 1. 宏观对抗：趋势 trend_norm vs 残差总表达 res_norm
+            adv_macro = my_kl_loss(trend_norm, res_norm.detach()) + my_kl_loss(res_norm.detach(), trend_norm)
+            con_macro = my_kl_loss(res_norm, trend_norm.detach()) + my_kl_loss(trend_norm.detach(), res_norm)
+
+            # 2. 微观对抗：周期 cycle_norm vs 高频突变 spike_norm
+            adv_micro = my_kl_loss(cycle_norm, spike_norm.detach()) + my_kl_loss(spike_norm.detach(), cycle_norm)
+            con_micro = my_kl_loss(spike_norm, cycle_norm.detach()) + my_kl_loss(cycle_norm.detach(), spike_norm)
+
+            # 组合两级对抗能量
+            adv_loss_total += (adv_macro + adv_micro) * (temperature / 2.0)
+            con_loss_total += (con_macro + con_micro) * (temperature / 2.0)
+
+        else:
+            # ===== 训练阶段：归一化为标量 =====
+            # 1. 宏观对抗
+            adv_macro = torch.mean(my_kl_loss(trend_norm, res_norm.detach()) + my_kl_loss(res_norm.detach(), trend_norm))
+            con_macro = torch.mean(my_kl_loss(res_norm, trend_norm.detach()) + my_kl_loss(trend_norm.detach(), res_norm))
+
+            # 2. 微观对抗
+            adv_micro = torch.mean(my_kl_loss(cycle_norm, spike_norm.detach()) + my_kl_loss(spike_norm.detach(), cycle_norm))
+            con_micro = torch.mean(my_kl_loss(spike_norm, cycle_norm.detach()) + my_kl_loss(cycle_norm.detach(), spike_norm))
+
+            # 组合两级 Loss
+            adv_loss_total += (adv_macro + adv_micro) * (temperature / 2.0)
+            con_loss_total += (con_macro + con_micro) * (temperature / 2.0)
+
+    adv_loss = adv_loss_total / layers_num
+    con_loss = con_loss_total / layers_num
+
+    # ===== 重建损失计算 =====
+    if keep_batch:
+        rec_loss = torch.mean((input - rec_x) ** 2, dim=-1)
+    else:
+        rec_loss = torch.mean((input - rec_x) ** 2)
+
+    return adv_loss, con_loss, rec_loss,prior_loss
