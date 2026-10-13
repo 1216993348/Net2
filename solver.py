@@ -38,7 +38,7 @@ class Solver(object):
     def __init__(self, config):
         self.__dict__.update(config)
 
-        self.num_epochs = getattr(self, 'num_epochs', 20)
+        self.num_epochs = getattr(self, 'num_epochs', 15)
 
         # 1. 数据加载
         self.train_loader = get_loader_segment(
@@ -72,32 +72,27 @@ class Solver(object):
             self.device = torch.device('cpu')
         print(f"[Solver] Active Device: {self.device}")
 
-        # 3. 初始化 Masked Counterfactual 模型
-        d_model = getattr(self, 'd_model', 128)
-        n_layers = getattr(self, 'n_layers', 3)
-        top_k = getattr(self, 'top_k', 3)
+        # 3. 初始化因果势能网络
+        d_model = getattr(self, 'd_model', 64)
+        n_prototypes = getattr(self, 'n_prototypes', 16)
 
         self.model = CEPNet(
             c_in=self.input_c,
             win_size=self.win_size,
             d_model=d_model,
-            n_layers=n_layers,
-            mask_ratio=0.4,
-            top_k=top_k,
+            n_prototypes=n_prototypes,
+            tau=0.5,
         ).to(self.device)
 
         total_params = sum(p.numel() for p in self.model.parameters())
-        print(f"[Model] Masked-CEPNet | Epochs: {self.num_epochs} | Params: {total_params:,}")
+        print(f"[Model] CEP-Net (Causal Hessian) Loaded | Prototypes: {n_prototypes} | Params: {total_params:,}")
 
         self.optimizer = torch.optim.AdamW(
-            self.model.parameters(), lr=getattr(self, 'lr', 5e-4), weight_decay=1e-4
-        )
-        self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-            self.optimizer, T_max=self.num_epochs, eta_min=1e-5
+            self.model.parameters(), lr=getattr(self, 'lr', 1e-3), weight_decay=1e-4
         )
 
     def train(self):
-        print("======================TRAIN CEP-Net (MASKED COUNTERFACTUAL)======================")
+        print("======================TRAIN CEP-Net (CAUSAL SECOND-ORDER)======================")
         if not os.path.exists(self.model_save_path):
             os.makedirs(self.model_save_path)
 
@@ -106,6 +101,8 @@ class Solver(object):
         for epoch in range(self.num_epochs):
             start_time = time.time()
             loss_list = []
+            rec_list = []
+            manifold_list = []
             self.model.train()
 
             with tqdm(
@@ -117,23 +114,35 @@ class Solver(object):
                     x = input_data.float().contiguous().to(self.device)
 
                     self.optimizer.zero_grad()
-                    x_star, _, _ = self.model(x)
+                    x_star, _, _, dist_sq = self.model(x)
 
-                    # 纯粹优雅的掩码自编码重构损失
-                    loss = torch.mean((x - x_star) ** 2)
+                    # 1. 物理反事实重构损失
+                    loss_rec = torch.mean((x - x_star) ** 2)
 
-                    loss.backward()
+                    # 2. 原型吸引子聚类紧致性损失 (拉近正常特征至健康凸包)
+                    min_dist, _ = torch.min(dist_sq, dim=-1)
+                    loss_manifold = torch.mean(min_dist)
+
+                    total_loss = loss_rec + 0.05 * loss_manifold
+
+                    total_loss.backward()
                     torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
                     self.optimizer.step()
 
-                    loss_list.append(loss.item())
-                    pbar.set_postfix({'rec_loss': f"{loss.item():.4f}"})
+                    loss_list.append(total_loss.item())
+                    rec_list.append(loss_rec.item())
+                    manifold_list.append(loss_manifold.item())
+
+                    pbar.set_postfix({
+                        'rec': f"{loss_rec.item():.4f}",
+                        'mani': f"{loss_manifold.item():.4f}",
+                    })
                     pbar.update(1)
 
-            self.scheduler.step()
             elapsed_time = time.time() - start_time
             print(
-                f"Epoch: {epoch + 1} | Rec Loss: {np.mean(loss_list):.5f} | Time: {elapsed_time:.2f}s"
+                f"Epoch: {epoch + 1} | Rec Loss: {np.mean(rec_list):.5f} |"
+                f" Manifold Loss: {np.mean(manifold_list):.5f} | Time: {elapsed_time:.2f}s"
             )
 
         save_file = os.path.join(self.model_save_path, f"{self.dataset}_checkpoint.pth")
@@ -153,7 +162,7 @@ class Solver(object):
         with torch.no_grad():
             for input_data, _ in self.thre_loader:
                 x = input_data.float().contiguous().to(self.device)
-                _, time_score, _ = self.model(x)
+                _, time_score, _, _ = self.model(x)
                 step_score = time_score[:, -1].detach().cpu().numpy()
                 thre_scores.append(step_score)
 
@@ -169,7 +178,7 @@ class Solver(object):
         with torch.no_grad():
             for input_data, labels in self.test_loader:
                 x = input_data.float().contiguous().to(self.device)
-                _, time_score, channel_attr = self.model(x)
+                _, time_score, channel_attr, _ = self.model(x)
 
                 step_score = time_score[:, -1].detach().cpu().numpy()
                 test_scores.append(step_score)

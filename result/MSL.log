@@ -1116,3 +1116,38 @@ train: (46653, 55)
 [Model] Scaled CEPNet | Epochs: 10 | Params: 85,198
 ======================TRAIN CEP-Net (DEEP SCALED)======================
 Epoch: 1 | Rec Loss: 0.53459 | Commit Loss: 0.00277 | Time: 49.15s
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 30
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Active Device: xpu
+[Model] CEP-Net (Causal Hessian) Loaded | Prototypes: 16 | Params: 14,919
+======================TRAIN CEP-Net (CAUSAL SECOND-ORDER)======================
+Epoch: 1 | Rec Loss: 0.55179 | Manifold Loss: 2.03534 | Time: 16.20s
+Epoch: 2 | Rec Loss: 0.39531 | Manifold Loss: 0.29034 | Time: 15.58s
