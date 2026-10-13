@@ -38,6 +38,9 @@ class Solver(object):
     def __init__(self, config):
         self.__dict__.update(config)
 
+        # 建议外部配置或默认设为 40 轮
+        self.num_epochs = getattr(self, 'num_epochs', 40)
+
         # 1. 数据加载
         self.train_loader = get_loader_segment(
             self.data_path,
@@ -70,7 +73,7 @@ class Solver(object):
             self.device = torch.device('cpu')
         print(f"[Solver] Active Device: {self.device}")
 
-        # 3. 初始化加固版模型
+        # 3. 初始化模型
         d_model = getattr(self, 'd_model', 64)
         num_codes = getattr(self, 'num_codes', 128)
         self.model = CEPNet(
@@ -81,15 +84,18 @@ class Solver(object):
         ).to(self.device)
 
         total_params = sum(p.numel() for p in self.model.parameters())
-        print(f"[Model] Robust EMA-VQ CEPNet Loaded | Total Params: {total_params:,}")
+        print(f"[Model] Spherical EMA-VQ CEPNet | Epochs: {self.num_epochs} | Params: {total_params:,}")
 
-        # 学习率推荐 5e-4，配合平滑梯度裁剪
+        # 采用余弦学习率衰减，保障充分收敛
         self.optimizer = torch.optim.AdamW(
-            self.model.parameters(), lr=getattr(self, 'lr', 5e-4), weight_decay=1e-4
+            self.model.parameters(), lr=getattr(self, 'lr', 1e-3), weight_decay=1e-4
+        )
+        self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+            self.optimizer, T_max=self.num_epochs, eta_min=1e-5
         )
 
     def train(self):
-        print("======================TRAIN CEP-Net (STABLE TWO-STAGE EMA)======================")
+        print("======================TRAIN CEP-Net (SPHERICAL EMA-VQ)======================")
         if not os.path.exists(self.model_save_path):
             os.makedirs(self.model_save_path)
 
@@ -120,7 +126,6 @@ class Solver(object):
                     total_loss = loss_rec + 0.25 * loss_commit
 
                     total_loss.backward()
-                    # 严格裁剪梯度范数
                     torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
                     self.optimizer.step()
 
@@ -133,6 +138,7 @@ class Solver(object):
                     })
                     pbar.update(1)
 
+            self.scheduler.step()
             elapsed_time = time.time() - start_time
             print(
                 f"Epoch: {epoch + 1} | Rec Loss: {np.mean(rec_list):.5f} |"
@@ -162,7 +168,7 @@ class Solver(object):
 
         thre_scores = np.concatenate(thre_scores, axis=0)
         anomaly_threshold = np.percentile(thre_scores, 100 - self.anormly_ratio)
-        print(f"[Threshold] Selected Threshold: {anomaly_threshold:.4f}")
+        print(f"[Threshold] Selected Cutoff: {anomaly_threshold:.4f}")
 
         print("======================TEST & EVALUATION======================")
         test_scores = []
@@ -205,7 +211,6 @@ class Solver(object):
         print(f"[Point-Adjusted]    Precision: {p_pa:.4f} | Recall: {r_pa:.4f} | F1: {f1_pa:.4f}")
         print("-" * 65)
 
-        # 根因分析输出演示
         abnormal_indices = np.where(pred == 1)[0]
         if len(abnormal_indices) > 0:
             print("[Root Cause Attribution Demonstration]")
