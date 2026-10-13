@@ -58,7 +58,6 @@ class EMAVectorQuantizer(nn.Module):
 
 
 class TransformerBlock(nn.Module):
-    """标准工业级 Transformer 块：FFN 放大比设为 4，保证非线性容量充足"""
     def __init__(self, d_model=128, n_heads=4):
         super(TransformerBlock, self).__init__()
         self.attn = nn.MultiheadAttention(d_model, n_heads, batch_first=True)
@@ -81,15 +80,16 @@ class TransformerBlock(nn.Module):
 
 class CEPNet(nn.Module):
     """
-    大容量反事实时空网络 (显式支撑 ~18 万参数量)
+    大容量反事实时空网络 (带 Top-k 局部故障感知打分)
     """
-    def __init__(self, c_in=55, win_size=60, d_model=128, num_codes=256, n_layers=3):
+    def __init__(self, c_in=55, win_size=60, d_model=128, num_codes=256, n_layers=3, top_k=3):
         super(CEPNet, self).__init__()
         self.c_in = c_in
         self.win_size = win_size
         self.d_model = d_model
+        self.top_k = top_k
 
-        # 1. 深度时空多通道投影头 (升维至 128)
+        # 1. 深度时空映射
         self.enc_in = nn.Sequential(
             nn.Linear(c_in, d_model),
             nn.GELU(),
@@ -97,29 +97,29 @@ class CEPNet(nn.Module):
         )
         self.pos_emb = nn.Parameter(torch.randn(1, win_size, d_model) * 0.02)
 
-        # 2. 深度编码器 (3 层 Transformer)
+        # 2. 深度编码器
         self.encoder_blocks = nn.ModuleList([
             TransformerBlock(d_model=d_model, n_heads=4)
             for _ in range(n_layers)
         ])
 
-        # 3. 超球 EMA 离散健康词元库
+        # 3. 超球 EMA 离散词元库
         self.quantizer = EMAVectorQuantizer(num_codes=num_codes, d_model=d_model)
 
-        # 4. 深度反事实解码器 (3 层 Transformer)
+        # 4. 深度解码器
         self.decoder_blocks = nn.ModuleList([
             TransformerBlock(d_model=d_model, n_heads=4)
             for _ in range(n_layers)
         ])
 
-        # 5. 物理输出映射头
+        # 5. 物理输出映射
         self.dec_out = nn.Sequential(
             nn.Linear(d_model, d_model),
             nn.GELU(),
             nn.Linear(d_model, c_in)
         )
 
-        # 6. 各通道物理刚度参数 (恒正)
+        # 6. 可学习通道刚度参数
         self.log_lambda = nn.Parameter(torch.zeros(c_in))
 
     def freeze_codebook(self):
@@ -130,28 +130,28 @@ class CEPNet(nn.Module):
         # x: [B, L, C]
         B, L, C = x.shape
 
-        # 1. 编码映射并注入时间位置编码
         h = self.enc_in(x) + self.pos_emb
         for block in self.encoder_blocks:
             h = block(h)
         z = h
 
-        # 2. 离散基元纯净投影 (彻底切断异常捷径)
         z_q, loss_commit, min_dist = self.quantizer(z)
 
-        # 3. 深度反事实物理波形生成
         dh = z_q
         for block in self.decoder_blocks:
             dh = block(dh)
         x_star = self.dec_out(dh)  # [B, L, C]
 
-        # 4. Pearl 个体因果干预效应 (ITE)
+        # Pearl 个体因果干预效应
         lambdas = F.softplus(self.log_lambda)
         intervention_effect = x - x_star
-        weighted_energy = lambdas * (intervention_effect ** 2)
+        channel_energies = lambdas * (intervention_effect ** 2)  # [B, L, C]
 
-        # 异常得分与通道归因
-        time_score = torch.sum(weighted_energy, dim=-1) + 0.01 * min_dist
-        channel_attribution = torch.mean(weighted_energy, dim=1)
+        # 关键改进：Top-k 通道聚焦打分 (规避 52 个无辜通道的底噪淹没真实故障)
+        # 取每个时间步残差最大的前 k 个通道做平均
+        topk_energies, _ = torch.topk(channel_energies, k=min(self.top_k, C), dim=-1)
+        time_score = torch.mean(topk_energies, dim=-1) + 0.005 * min_dist
+
+        channel_attribution = torch.mean(channel_energies, dim=1)
 
         return x_star, time_score, channel_attribution, loss_commit

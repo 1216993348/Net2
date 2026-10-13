@@ -38,7 +38,6 @@ class Solver(object):
     def __init__(self, config):
         self.__dict__.update(config)
 
-        # 设为 30 轮，保证 Transformer 充分收敛
         self.num_epochs = getattr(self, 'num_epochs', 30)
 
         # 1. 数据加载
@@ -73,10 +72,11 @@ class Solver(object):
             self.device = torch.device('cpu')
         print(f"[Solver] Active Device: {self.device}")
 
-        # 3. 初始化大容量模型
+        # 3. 初始化模型 (加入 top_k=3 局部故障感知)
         d_model = getattr(self, 'd_model', 128)
         num_codes = getattr(self, 'num_codes', 256)
         n_layers = getattr(self, 'n_layers', 3)
+        top_k = getattr(self, 'top_k', 3)
 
         self.model = CEPNet(
             c_in=self.input_c,
@@ -84,10 +84,11 @@ class Solver(object):
             d_model=d_model,
             num_codes=num_codes,
             n_layers=n_layers,
+            top_k=top_k,
         ).to(self.device)
 
         total_params = sum(p.numel() for p in self.model.parameters())
-        print(f"[Model] Scaled CEPNet | Epochs: {self.num_epochs} | Params: {total_params:,}")
+        print(f"[Model] Scaled CEPNet | Epochs: {self.num_epochs} | Top-K: {top_k} | Params: {total_params:,}")
 
         self.optimizer = torch.optim.AdamW(
             self.model.parameters(), lr=getattr(self, 'lr', 1e-3), weight_decay=1e-4
@@ -97,7 +98,7 @@ class Solver(object):
         )
 
     def train(self):
-        print("======================TRAIN CEP-Net (DEEP SCALED)======================")
+        print("======================TRAIN CEP-Net (TOP-K ROOT-FOCUSED)======================")
         if not os.path.exists(self.model_save_path):
             os.makedirs(self.model_save_path)
 
