@@ -1581,3 +1581,1388 @@ Epoch: 1 | Train: 4.852336 | Vali: 3.057916 | Time: 31.53s
 ======================TEST & ROOT CAUSE INFERENCE======================
 Anomaly Decision Threshold: 0.35195458585024386
 Accuracy: 0.9847 | Precision: 0.9226 | Recall: 0.9330 | F1-Score: 0.9278 | ROC-AUC: 0.4393
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+[Model] Total params: 19,831 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 2.936105 | Vali: 2.761849 | Time: 31.71s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.40239937993884173
+Accuracy: 0.8881 | Precision: 0.1271 | Recall: 0.0106 | F1-Score: 0.0195 | ROC-AUC: 0.4396
+Accuracy: 0.9868 | Precision: 0.9289 | Recall: 0.9473 | F1-Score: 0.9380 | ROC-AUC: 0.4396
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+Epoch: 1 | Train Loss: 17.968962 | Vali Loss: 0.552806 | Time: 116.82s
+       -> Learned Prototype Radii R_k: [1.019, 1.075, 1.018, 1.018, 1.016]
+====================== DETERMINING BASELINE THRESHOLD ======================
+Anomaly Energy Decision Threshold: 8.677169
+Normal Reconstruction Base Upper Bound: 1.923014
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 0
+Accuracy: 0.9760 | Precision: 0.9120 | Recall: 0.8542 | F1-Score: 0.8822 | ROC-AUC: 0.5568
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+>>> Epoch 1: Pre-training backbone with Pure Reconstruction (Warm-up)...
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+>>> Epoch 1: Pre-training backbone with Pure Reconstruction (Warm-up)...
+[Warm-up] Extracting latent features for Prototype K-Means Seeding...
+[Warm-up] Running K-Means (K=5) on 4655400 feature vectors...
+[Warm-up] Prototypes successfully seeded with empirical cluster centers.
+Epoch: 1 | Train Loss: 0.608451 | Vali Loss: 0.544609 | Time: 127.17s
+Epoch: 2 | Train Loss: 1.577542 | Vali Loss: 0.540252 | Time: 69.64s
+       -> Learned Prototype Radii R_k: [1.011, 1.008, 1.014, 1.031, 1.031]
+====================== DETERMINING BASELINE THRESHOLD ======================
+Anomaly Energy Decision Threshold: 6.913708
+Normal Reconstruction Base Upper Bound: 1.874616
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 0
+Accuracy: 0.9742 | Precision: 0.8964 | Recall: 0.8542 | F1-Score: 0.8748 | ROC-AUC: 0.5183
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+>>> Epoch 1: Pre-training backbone with Pure Reconstruction (Warm-up)...
+[Warm-up] Extracting latent features for Prototype K-Means Seeding...
+[Warm-up] Running K-Means (K=5) on 4655400 feature vectors...
+[Warm-up] Prototypes successfully seeded with empirical cluster centers.
+Epoch: 1 | Train Loss: 0.608451 | Vali Loss: 0.544609 | Time: 728.92s
+Epoch: 2 | Train Loss: 1.598155 | Vali Loss: 0.540191 | Time: 34.36s
+       -> Learned Prototype Radii R_k: [1.016, 1.008, 1.015, 1.032, 1.031]
+====================== DETERMINING BASELINE THRESHOLD ======================
+Anomaly Energy Decision Threshold: 6.716469
+Normal Reconstruction Base Upper Bound: 1.873039
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 0
+Accuracy: 0.9755 | Precision: 0.8912 | Recall: 0.8737 | F1-Score: 0.8824 | ROC-AUC: 0.5228
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+>>> Epoch 1: Pre-training backbone with Pure Reconstruction (Warm-up)...
+[Warm-up] Extracting latent features for Prototype K-Means Seeding...
+[Warm-up] Running K-Means (K=5) on 4655400 feature vectors...
+[Warm-up] Prototypes successfully seeded with empirical cluster centers.
+Epoch: 1 | Train Loss: 0.608451 | Vali Loss: 0.544609 | Time: 97.12s
+Epoch: 2 | Train Loss: 1.589952 | Vali Loss: 0.540186 | Time: 54.69s
+       -> Learned Prototype Radii R_k: [1.017, 1.008, 1.015, 1.031, 1.030]
+====================== DETERMINING BASELINE THRESHOLD ======================
+Anomaly Energy Decision Threshold: 6.736712
+Normal Reconstruction Base Upper Bound: 1.873424
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 0
+Accuracy: 0.8881 | Precision: 0.2732 | Recall: 0.0372 | F1-Score: 0.0655 | ROC-AUC: 0.5206
+Accuracy: 0.9742 | Precision: 0.8961 | Recall: 0.8542 | F1-Score: 0.8747 | ROC-AUC: 0.5206
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+>>> Epoch 1: Warm-up Backbone with Pure Reconstruction...
+[Warm-up] Extracting spherical features for K-Means++ Seeding...
+[Warm-up] Spherical prototypes seeded successfully.
+Epoch: 1 | Train Loss: 0.611177 | Vali Loss: 0.539861 | Time: 41.75s
+Epoch: 2 | Train Loss: 0.614560 | Vali Loss: 0.530696 | Time: 33.55s
+[Calibration] R_in (85%):  [0.1215, 0.1215, 0.1045, 0.1215, 0.1221]
+[Calibration] R_out (99.5%): [0.2512, 0.2512, 0.1642, 0.2512, 0.1990]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.1215, 0.1215, 0.1045, 0.1215, 0.1221]
+[Calibration] R_out (99.5%): [0.2512, 0.2512, 0.1642, 0.2512, 0.1990]
+Aligned Anomaly Decision Threshold: 4.9005
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 10
+[Before PA] Accuracy: 0.8892 | Precision: 0.3046 | Recall: 0.0400 | F1-Score: 0.0708 | ROC-AUC: 0.5744
+[After PA]  Accuracy: 0.9761 | Precision: 0.9044 | Recall: 0.8648 | F1-Score: 0.8841 | ROC-AUC: 0.5744
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+>>> Epoch 1: Warm-up Backbone with Pure Reconstruction...
+[Warm-up] Extracting latent features for K-Means++ Seeding...
+[Warm-up] Prototypes seeded with empirical cluster centers.
+Epoch: 1 | Train Loss: 0.608451 | Vali Loss: 0.545071 | Time: 58.52s
+Epoch: 2 | Train Loss: 0.804095 | Vali Loss: 0.539357 | Time: 56.12s
+[Calibration] R_in (85%):  [0.9446, 0.8027, 0.7915, 0.9446, 1.1468]
+[Calibration] R_out (99.0%): [1.2389, 1.1653, 1.2758, 1.2389, 1.2372]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.9446, 0.8027, 0.7915, 0.9446, 1.1468]
+[Calibration] R_out (99.0%): [1.2389, 1.1653, 1.2758, 1.2389, 1.2372]
+Synergy Anomaly Decision Threshold: 5.364055
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 9
+[Before PA] Accuracy: 0.8898 | Precision: 0.3084 | Recall: 0.0366 | F1-Score: 0.0654 | ROC-AUC: 0.5678
+[After PA]  Accuracy: 0.9760 | Precision: 0.9124 | Recall: 0.8542 | F1-Score: 0.8824 | ROC-AUC: 0.5678
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ANGULAR CONTRASTIVE AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ANGULAR CONTRASTIVE AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ANGULAR CONTRASTIVE AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+Epoch: 1 | Train Loss: N/A | Time: 35.44s
+Epoch: 2 | Train Loss: 0.724745
+[Calibration] R_in (85%):  [0.0462, 0.0354, 0.0426, 0.0462, 0.0462]
+[Calibration] R_out (99.5%): [0.1601, 0.0651, 0.1819, 0.1601, 0.1601]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.0462, 0.0354, 0.0426, 0.0462, 0.0462]
+[Calibration] R_out (99.5%): [0.1601, 0.0651, 0.1819, 0.1601, 0.1601]
+Pure Angular Decision Threshold: 0.130500
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 11
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ANGULAR CONTRASTIVE AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+Epoch: 1 | Train Loss: 0.608451 | Time: 35.48s
+Epoch: 2 | Train Loss: 0.725989 | Time: 24.83s
+[Calibration] R_in (85%):  [0.0473, 0.0347, 0.0424, 0.0473, 0.0473]
+[Calibration] R_out (99.5%): [0.1525, 0.0589, 0.1644, 0.1525, 0.1525]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.0473, 0.0347, 0.0424, 0.0473, 0.0473]
+[Calibration] R_out (99.5%): [0.1525, 0.0589, 0.1644, 0.1525, 0.1525]
+Pure Angular Decision Threshold: 0.234214
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 9
+[Before PA] Accuracy: 0.8807 | Precision: 0.2030 | Recall: 0.0452 | F1-Score: 0.0739 | ROC-AUC: 0.6390
+[After PA]  Accuracy: 0.9609 | Precision: 0.8197 | Recall: 0.8069 | F1-Score: 0.8132 | ROC-AUC: 0.6390
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ANGULAR CONTRASTIVE AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+Epoch: 1 | Train Loss: 0.608451 | Time: 36.51s
+Epoch: 2 | Train Loss: 0.724879 | Time: 27.06s
+[Calibration] R_in (85%):  [0.0484, 0.0341, 0.0425, 0.0484, 0.0484]
+[Calibration] R_out (99.5%): [0.1278, 0.0556, 0.1233, 0.1278, 0.1278]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.0484, 0.0341, 0.0425, 0.0484, 0.0484]
+[Calibration] R_out (99.5%): [0.1278, 0.0556, 0.1233, 0.1278, 0.1278]
+Filtered Angular Decision Threshold: 0.130354
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 10
+[Before PA] Accuracy: 0.8733 | Precision: 0.2269 | Recall: 0.0840 | F1-Score: 0.1226 | ROC-AUC: 0.6594
+[After PA]  Accuracy: 0.8903 | Precision: 0.4611 | Recall: 0.2448 | F1-Score: 0.3198 | ROC-AUC: 0.6594
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ENTROPY-CONTRASTIVE AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+Epoch: 1 | Train Loss: 0.608451 | Time: 53.57s
+Epoch: 2 | Train Loss: 0.727782 | Time: 40.09s
+[Calibration] R_in (85%):  [0.0190, 0.0190, 0.0190, 0.0190, 0.0190]
+[Calibration] R_out (99.5%): [0.0960, 0.0960, 0.0960, 0.0960, 0.0960]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.0190, 0.0190, 0.0190, 0.0190, 0.0190]
+[Calibration] R_out (99.5%): [0.0960, 0.0960, 0.0960, 0.0960, 0.0960]
+Entropy-Augmented Decision Threshold: 0.124653
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 7
+[Before PA] Accuracy: 0.8726 | Precision: 0.1993 | Recall: 0.0694 | F1-Score: 0.1030 | ROC-AUC: 0.5457
+[After PA]  Accuracy: 0.9251 | Precision: 0.6708 | Recall: 0.5680 | F1-Score: 0.6151 | ROC-AUC: 0.5457
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN DECOUPLED TTA AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+Epoch: 1 | Train Loss: 0.608451 | Time: 35.66s
+Epoch: 2 | Train Loss: 0.671441 | Time: 25.84s
+[Calibration] R_in (85%):  [0.0175, 0.0133, 0.0196, 0.0175, 0.0175]
+[Calibration] R_out (99.5%): [0.0650, 0.0440, 0.0758, 0.0650, 0.0650]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.0175, 0.0133, 0.0196, 0.0175, 0.0175]
+[Calibration] R_out (99.5%): [0.0650, 0.0440, 0.0758, 0.0650, 0.0650]
+Time-Domain Decision Threshold: 4.755414
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 10
+[Before PA] Accuracy: 0.8895 | Precision: 0.3013 | Recall: 0.0367 | F1-Score: 0.0654 | ROC-AUC: 0.5324
+[After PA]  Accuracy: 0.9768 | Precision: 0.9104 | Recall: 0.8647 | F1-Score: 0.8869 | ROC-AUC: 0.5324
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN DECOUPLED TTA AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+Epoch: 1 | Train Loss: 0.608451 | Time: 52.39s
+Epoch: 2 | Train Loss: 0.672009 | Time: 25.92s
+[Calibration] R_in (85%):  [0.0163, 0.0138, 0.0178, 0.0163, 0.0163]
+[Calibration] R_out (99.5%): [0.0655, 0.0733, 0.0287, 0.0655, 0.0655]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.0163, 0.0138, 0.0178, 0.0163, 0.0163]
+[Calibration] R_out (99.5%): [0.0655, 0.0733, 0.0287, 0.0655, 0.0655]
+Softmax-Torn Decision Threshold: 0.41268021
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 12
+[Before PA] Accuracy: 0.8880 | Precision: 0.1239 | Recall: 0.0104 | F1-Score: 0.0192 | ROC-AUC: 0.4397
+[After PA]  Accuracy: 0.9835 | Precision: 0.9256 | Recall: 0.9175 | F1-Score: 0.9215 | ROC-AUC: 0.4397
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN DECOUPLED TTA AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+Epoch: 1 | Train Loss: 0.649313 | Time: 45.24s
+Epoch: 2 | Train Loss: 0.715105 | Time: 25.72s
+[Calibration] R_in (85%):  [0.0164, 0.0164, 0.0115, 0.0140, 0.0164]
+[Calibration] R_out (99.5%): [0.0387, 0.0387, 0.0190, 0.0310, 0.0387]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.0164, 0.0164, 0.0115, 0.0140, 0.0164]
+[Calibration] R_out (99.5%): [0.0387, 0.0387, 0.0190, 0.0310, 0.0387]
+Softmax-Torn Decision Threshold: 0.41742700
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 11
+[Before PA] Accuracy: 0.8883 | Precision: 0.1242 | Recall: 0.0106 | F1-Score: 0.0195 | ROC-AUC: 0.4353
+[After PA]  Accuracy: 0.9824 | Precision: 0.9239 | Recall: 0.9067 | F1-Score: 0.9152 | ROC-AUC: 0.4353
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN DECOUPLED TTA AD ======================
+>>> Epoch 1: Warm-up Backbone (MSE Only)...
+[Warm-up] Spherical K-Means++ Seeding...
+[Warm-up] Seeding Done.
+Epoch: 1 | Train Loss: 0.341236 | Time: 10.10s
+Epoch: 2 | Train Loss: 0.513796 | Time: 4.37s
+[Calibration] R_in (85%):  [0.1572, 0.1572, 0.1572, 0.1572, 0.1572]
+[Calibration] R_out (99.5%): [0.3273, 0.3273, 0.3273, 0.3273, 0.3273]
+====================== CALIBRATING SCORE & BOUNDARIES ======================
+[Calibration] R_in (85%):  [0.1572, 0.1572, 0.1572, 0.1572, 0.1572]
+[Calibration] R_out (99.5%): [0.3273, 0.3273, 0.3273, 0.3273, 0.3273]
+Softmax-Torn Decision Threshold: 0.57286135
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 0
+[Before PA] Accuracy: 0.9857 | Precision: 0.0476 | Recall: 0.0476 | F1-Score: 0.0476 | ROC-AUC: 0.6790
+[After PA]  Accuracy: 0.9929 | Precision: 0.5122 | Recall: 1.0000 | F1-Score: 0.6774 | ROC-AUC: 0.6790
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+================ TRAIN: PTA (linear) ================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+================ TRAIN: PTA (linear) ================
+[PTA] Spherical K-Means Seeding Done.
+Epoch 1 | Loss: 0.330733 | Time: 9.28s
+Epoch 2 | Loss: 0.472689 | Time: 3.45s
+[PTA] Streaming Adaptation Completed. Total Momentum Updates: 0
+[Before PA] Acc: 0.4896 | P: 0.0097 | R: 0.6667 | F1: 0.0192 | AUC: 0.6503
+[After PA]  Acc: 0.4921 | P: 0.0146 | R: 1.0000 | F1: 0.0287 | AUC: 0.6503
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 64
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+================ TRAIN: Baseline (linear) ================
+Epoch 1 | Loss: 0.330438 | Time: 3.33s
+Epoch 2 | Loss: 0.321789 | Time: 3.36s
+[Before PA] Acc: 0.4896 | P: 0.0097 | R: 0.6667 | F1: 0.0192 | AUC: 0.6479
+[After PA]  Acc: 0.4921 | P: 0.0146 | R: 1.0000 | F1: 0.0287 | AUC: 0.6479
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+================ TRAIN: Baseline (linear) ================
+Epoch 1 | Loss: 0.319093 | Time: 3.57s
+Epoch 2 | Loss: 0.290769 | Time: 3.52s
+[Before PA] Acc: 0.4900 | P: 0.0098 | R: 0.6667 | F1: 0.0192 | AUC: 0.6492
+[After PA]  Acc: 0.4925 | P: 0.0146 | R: 1.0000 | F1: 0.0287 | AUC: 0.6492
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+================ TRAIN: PTA (linear) ================
+[PTA] Spherical K-Means Seeding Done.
+Epoch 1 | Loss: 0.319589 | Time: 9.42s
+Epoch 2 | Loss: 0.413753 | Time: 3.98s
+[PTA] Streaming Adaptation Completed. Total Momentum Updates: 0
+[Before PA] Acc: 0.4896 | P: 0.0097 | R: 0.6667 | F1: 0.0192 | AUC: 0.6457
+[After PA]  Acc: 0.4921 | P: 0.0146 | R: 1.0000 | F1: 0.0287 | AUC: 0.6457
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+================ TRAIN: PTA (linear) ================
+[PTA] Spherical K-Means Seeding Done.
+Epoch 1 | Loss: 0.319589 | Time: 9.76s
+Epoch 2 | Loss: 0.386695 | Time: 5.18s
+[PTA] Streaming Adaptation Completed. Total Momentum Updates: 0
+[Before PA] Acc: 0.9746 | P: 0.0536 | R: 0.1429 | F1: 0.0779 | AUC: 0.4413
+[After PA]  Acc: 0.9811 | P: 0.2838 | R: 1.0000 | F1: 0.4421 | AUC: 0.4413
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+test: (2856, 55)
+train: (2945, 55)
+================ TRAIN: PTA (linear) ================
+[PTA] Spherical K-Means Seeding Done.
+Epoch 1 | Loss: 0.319589 | Time: 9.17s
+Epoch 2 | Loss: 0.398638 | Time: 4.01s
+[PTA] Streaming Adaptation Completed. Total Momentum Updates: 0
+[Before PA] Acc: 0.4896 | P: 0.0097 | R: 0.6667 | F1: 0.0192 | AUC: 0.6507
+[After PA]  Acc: 0.4921 | P: 0.0146 | R: 1.0000 | F1: 0.0287 | AUC: 0.6507
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+================ TRAIN: PTA (linear) ================
+[PTA] Spherical K-Means Seeding Done.
+Epoch 1 | Loss: 0.424373 | Time: 19.93s
+Epoch 2 | Loss: 0.280816 | Time: 20.82s
+[PTA] Streaming Adaptation Completed. Total Momentum Updates: 15
+[Before PA] Acc: 0.8880 | P: 0.2637 | R: 0.0353 | F1: 0.0622 | AUC: 0.5092
+[After PA]  Acc: 0.9683 | P: 0.8901 | R: 0.7975 | F1: 0.8412 | AUC: 0.5092
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Initializing Standalone ProtoTTA-Net on cpu
+====================== TRAIN STANDALONE ProtoTTA-Net ======================
+[ProtoTTA] Prototypes seeded with K-Means++ centers.
+Epoch 1 | Loss: 0.589292 | Time: 60.00s
+Epoch 2 | Loss: 0.317225 | Time: 56.73s
+[ProtoTTA] Adaptation Finished. Total Zero-Gradient Updates: 5
+[Before PA] Acc: 0.8917 | P: 0.3456 | R: 0.0314 | F1: 0.0576 | AUC: 0.5328
+[After PA]  Acc: 0.9302 | P: 0.8698 | R: 0.3974 | F1: 0.5455 | AUC: 0.5328
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Initializing Standalone ProtoTTA-Net on cpu
+====================== TRAIN STANDALONE ProtoTTA-Net ======================
+[ProtoTTA] Prototypes initialized with spherical K-Means centers.
+Epoch 1 | Loss: 0.523880 | Time: 89.46s
+Epoch 2 | Loss: 0.271415 | Time: 68.33s
+[ProtoTTA] Adaptation Finished. Total Zero-Gradient Updates: 18
+[Before PA] Acc: 0.8935 | P: 0.4244 | R: 0.0300 | F1: 0.0560 | AUC: 0.5336
+[After PA]  Acc: 0.9183 | P: 0.8669 | R: 0.2650 | F1: 0.4059 | AUC: 0.5336
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+Epoch: 1 | Train Loss: 8.044198 | Vali Loss: 0.552013 | Time: 236.40s
+       -> Learned Prototype Radii R_k: [1.024, 1.268, 1.027, 1.020, 1.017]
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+Epoch: 1 | Train Loss: 8.044198 | Vali Loss: 0.552013 | Time: 236.61s
+       -> Learned Prototype Radii R_k: [1.024, 1.268, 1.027, 1.020, 1.017]
+Epoch: 2 | Train Loss: 0.827472 | Vali Loss: 0.552097 | Time: 214.49s
+       -> Learned Prototype Radii R_k: [1.031, 1.191, 1.030, 1.032, 1.020]
+====================== DETERMINING BASELINE THRESHOLD ======================
+Anomaly Energy Decision Threshold: 5.985348
+Normal Reconstruction Base Upper Bound: 1.927502
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 0
+Accuracy: 0.9753 | Precision: 0.9063 | Recall: 0.8542 | F1-Score: 0.8795 | ROC-AUC: 0.5374
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: xpu
+====================== TRAIN ROBUST PROTO AD ======================
+
+
+
+------------ Options -------------
+anormly_ratio: 0.9
+batch_size: 16
+config: config/MSL.conf
+d_model: 32
+data_path: dataset/MSL
+dataset: MSL
+e_layers: 3
+gpu: 0
+input_c: 55
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 2
+output_c: 55
+print_tqdm: True
+seed: 0
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+test: (73729, 55)
+train: (46653, 55)
+[Solver] Using execution device: cpu
+====================== TRAIN ROBUST PROTO AD ======================
+Epoch: 1 | Train Loss: 8.044198 | Vali Loss: 0.552013 | Time: 205.76s
+       -> Learned Prototype Radii R_k: [1.024, 1.268, 1.027, 1.020, 1.017]
+Epoch: 2 | Train Loss: 0.827472 | Vali Loss: 0.552097 | Time: 233.95s
+       -> Learned Prototype Radii R_k: [1.031, 1.191, 1.030, 1.032, 1.020]
+====================== DETERMINING BASELINE THRESHOLD ======================
+Anomaly Energy Decision Threshold: 5.985348
+Normal Reconstruction Base Upper Bound: 1.927502
+====================== STREAMING TEST-TIME ADAPTATION ======================
+[TTA Audit] Streaming Adaptation Completed. Total Momentum Updates: 0
+Accuracy: 0.9753 | Precision: 0.9063 | Recall: 0.8542 | F1-Score: 0.8795 | ROC-AUC: 0.5374

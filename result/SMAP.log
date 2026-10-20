@@ -306,3 +306,41 @@ Epoch: 1, Steps: 1689 | Train Loss: 10.1035539 Vali Loss: 9.1805457 | Time: 55.1
 ======================TEST MODE======================
 Threshold : 0.17193204
 Accuracy : 0.9857, Precision : 0.9402, Recall : 0.9482, F-score : 0.9442
+
+
+------------ Options -------------
+anormly_ratio: 0.72
+batch_size: 64
+config: config/SMAP.conf
+d_model: 32
+data_path: dataset/SMAP
+dataset: SMAP
+e_layers: 3
+gpu: 0
+input_c: 25
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 25
+print_tqdm: True
+seed: 1
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+test: (427617, 25)
+train: (108146, 25)
+[Solver] Using execution device: xpu
+[Model] Total params: 16,441 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
+Epoch: 1 | Train: 3.358350 | Vali: 2.713684 | Time: 57.19s
+======================TEST & ROOT CAUSE INFERENCE======================
+Anomaly Decision Threshold: 0.2232215276718147
+Accuracy: 0.9393 | Precision: 0.9038 | Recall: 0.5883 | F1-Score: 0.7127 | ROC-AUC: 0.6085

@@ -240,3 +240,37 @@ Threshold : 0.5025917
 Accuracy : 0.9944, Precision : 0.9203, Recall : 0.9463, F-score : 0.9331
 ROC AUC   : 0.2350
 F1=0.9331
+
+
+------------ Options -------------
+anormly_ratio: 0.42
+batch_size: 64
+config: config/SMD.conf
+d_model: 32
+data_path: dataset/SMD
+dataset: SMD
+e_layers: 3
+gpu: 0
+input_c: 38
+lr: 0.0001
+mode: te
+model_save_path: cpt
+num_epochs: 1
+output_c: 38
+print_tqdm: True
+seed: 12
+seq_size: 10
+use_recon: True
+win_size: 100
+-------------- End ----------------
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+test: (708420, 38)
+train: (566724, 38)
+[Solver] Using execution device: xpu
+[Model] Total params: 17,910 (0.02M)
+======================TRAIN PROTO-CAUSAL AD======================
