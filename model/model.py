@@ -7,7 +7,7 @@ from .embed import DataEmbedding, PositionalEmbedding
 
 class BoundedPrototypeBank(nn.Module):
     """
-    带正样本安全球与对抗排斥边界的原型记忆库:
+    具备正样本安全包络与对抗排斥边界的原型记忆库:
     1. 维护 K 个离散稳态工况的核心坐标 P_k
     2. 训练阶段联合优化每个原型的紧致安全半径 R_k
     """
@@ -94,6 +94,7 @@ class RobustProtoAD(nn.Module):
                  delta=0.5, nu=0.1, epsilon=0.05):
         super(RobustProtoAD, self).__init__()
         self.win_size = win_size
+        self.d_model = d_model
         self.epsilon = epsilon
 
         # 1. 时空编码骨干

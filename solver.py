@@ -4,6 +4,7 @@ import os
 import time
 from tqdm import tqdm
 from collections import deque
+from sklearn.cluster import KMeans
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score, roc_auc_score
 from model.model import RobustProtoAD
 from data_factory.data_loader import get_loader_segment
@@ -33,12 +34,7 @@ class Solver(object):
         self.thre_loader = get_loader_segment(self.data_path, batch_size=self.batch_size, win_size=self.win_size,
                                               mode='thre', dataset=self.dataset)
 
-        if hasattr(torch, 'xpu') and torch.xpu.is_available():
-            self.device = torch.device('cpu')
-        elif torch.cuda.is_available():
-            self.device = torch.device(f"cuda:{self.gpu}")
-        else:
-            self.device = torch.device('cpu')
+        self.device = torch.device(f"cuda:{self.gpu}" if torch.cuda.is_available() else "cpu")
         print(f"[Solver] Using execution device: {self.device}")
         self.build_model()
 
@@ -57,6 +53,32 @@ class Solver(object):
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
 
+    @torch.no_grad()
+    def init_prototypes_by_kmeans(self):
+        """
+        在预训练 1 轮后，利用冻结的编码器提取特征，通过 K-Means 聚类为原型赋予真实数据流形中心
+        """
+        print("[Warm-up] Extracting latent features for Prototype K-Means Seeding...")
+        self.model.eval()
+        latent_features = []
+
+        for input_data, _ in self.train_loader:
+            input_tensor = input_data.float().to(self.device)
+            z = self.model.encoder(input_tensor)  # [B, L, D]
+            z_flat = z.reshape(-1, self.d_model)   # [B*L, D]
+            latent_features.append(z_flat.cpu().numpy())
+
+        latent_features = np.concatenate(latent_features, axis=0)  # [N_total, D]
+
+        print(f"[Warm-up] Running K-Means (K={self.num_prototypes}) on {latent_features.shape[0]} feature vectors...")
+        kmeans = KMeans(n_clusters=self.num_prototypes, init='k-means++', n_init=10, random_state=42)
+        kmeans.fit(latent_features)
+        cluster_centers = torch.tensor(kmeans.cluster_centers_, dtype=torch.float32, device=self.device)
+
+        # 核心赋值：用真实聚类中心直接覆盖原型参数
+        self.model.proto_bank.prototypes.data.copy_(cluster_centers)
+        print("[Warm-up] Prototypes successfully seeded with empirical cluster centers.")
+
     def train(self):
         print("====================== TRAIN ROBUST PROTO AD ======================")
         path = self.model_save_path
@@ -68,18 +90,44 @@ class Solver(object):
             self.model.train()
             train_loss = []
 
-            for input_data, _ in self.train_loader:
-                self.optimizer.zero_grad()
-                input_tensor = input_data.float().to(self.device)
+            # ========================
+            # Epoch 0: 纯重构 Warm-up 阶段
+            # ========================
+            if epoch == 0:
+                print(">>> Epoch 1: Pre-training backbone with Pure Reconstruction (Warm-up)...")
+                for input_data, _ in self.train_loader:
+                    self.optimizer.zero_grad()
+                    input_tensor = input_data.float().to(self.device)
 
-                output = self.model(input_tensor, training=True)
-                rec_loss = torch.mean((input_tensor - output['rec_x']) ** 2)
-                proto_loss = output['proto_loss']
+                    # 仅前向通过 Encoder 和 Decoder，不计算原型和对抗损失
+                    z = self.model.encoder(input_tensor)
+                    rec_x = self.model.decoder(z)  # 此时直接解码 z 做预热
 
-                total_loss = rec_loss + 0.1 * proto_loss
-                total_loss.backward()
-                self.optimizer.step()
-                train_loss.append(total_loss.item())
+                    loss = torch.mean((input_tensor - rec_x) ** 2)
+                    loss.backward()
+                    self.optimizer.step()
+                    train_loss.append(loss.item())
+
+                # 第 1 轮结束后：立即执行 K-Means 聚类，给原型赋初值
+                self.init_prototypes_by_kmeans()
+
+            # ========================
+            # Epoch 1+: 正式端到端联合训练
+            # ========================
+            else:
+                for input_data, _ in self.train_loader:
+                    self.optimizer.zero_grad()
+                    input_tensor = input_data.float().to(self.device)
+
+                    # 开启 training=True：包含对抗扰动、正样本安全球、负样本对抗推离
+                    output = self.model(input_tensor, training=True)
+                    rec_loss = torch.mean((input_tensor - output['rec_x']) ** 2)
+                    proto_loss = output['proto_loss']
+
+                    total_loss = rec_loss + 0.1 * proto_loss
+                    total_loss.backward()
+                    self.optimizer.step()
+                    train_loss.append(total_loss.item())
 
             # 验证集评估
             self.model.eval()
@@ -94,9 +142,9 @@ class Solver(object):
             print(f"Epoch: {epoch + 1} | Train Loss: {np.mean(train_loss):.6f} | "
                   f"Vali Loss: {np.mean(val_loss):.6f} | Time: {time.time() - start_time:.2f}s")
 
-            # 打印当前学出的原型安全半径状态
-            r_str = ", ".join([f"{r.item():.3f}" for r in self.model.proto_bank.radius.data])
-            print(f"       -> Learned Prototype Radii R_k: [{r_str}]")
+            if epoch > 0:
+                r_str = ", ".join([f"{r.item():.3f}" for r in self.model.proto_bank.radius.data])
+                print(f"       -> Learned Prototype Radii R_k: [{r_str}]")
 
         torch.save(self.model.state_dict(), os.path.join(path, f"{self.dataset}_checkpoint.pth"))
 
